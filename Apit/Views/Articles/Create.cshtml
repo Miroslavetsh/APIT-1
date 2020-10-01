@@ -1,0 +1,54 @@
+﻿@model NewArticleViewModel
+@inject DataManager DataManager
+
+@{
+    Layout = "_Layout";
+    var allTopics = DataManager.Topics.GetAll().ToArray();
+}
+
+<form asp-area="" asp-controller="articles" asp-action="create"
+      method="post" asp-route-returnUrl="/">
+    <div asp-validation-summary="All">
+        <div>
+            <label asp-for="Topic"></label>
+            @if (allTopics.Any())
+            {
+                <select asp-for="Topic">
+                    @foreach (var topic in allTopics)
+                    {
+                        <option value="@topic.Id">@topic.Name</option>
+                    }
+                </select>
+                <div>
+                    <label asp-for="CreateNewTopic"></label>
+                    <input asp-for="CreateNewTopic" type="checkbox">
+                    <input asp-for="Topic" type="text">
+                </div>
+            }
+            else
+            {
+                <input asp-for="CreateNewTopic" type="checkbox" checked="checked" style="display: none">
+                <input asp-for="Topic" type="text">
+            }
+        </div>
+        
+        <div>
+            <label asp-for="KeyWords"></label>
+            <input asp-for="KeyWords" type="text">
+            <span asp-validation-for="KeyWords"></span>
+        </div>
+        <div>
+            <label asp-for="Title"></label>
+            <input asp-for="Title" type="text">
+            <span asp-validation-for="Title"></span>
+        </div>
+        <div>
+            <label asp-for="TextHTML"></label>
+            <span asp-validation-for="TextHTML"></span>
+            <textarea  asp-for="TextHTML" cols="50" rows="10"></textarea>
+        </div>
+        <div>
+            <input type="submit" value="Publish">
+        </div>
+    </div>
+</form>

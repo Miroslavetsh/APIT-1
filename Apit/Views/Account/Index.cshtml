@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "_Layout";
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<h1>Management page</h1>
+
+<div class="user-info">
+    <h2>@user.LastName @user.FirstName @user.MiddleName</h2>
+    <a asp-area="" asp-controller="account" asp-action="edit">Edit profile</a>
+</div>
+
+<hr>
+
+<div class="articles-working">
+    <h2>Articles workshop</h2>
+    <a asp-area="" asp-controller="articles" asp-action="create">CREATE</a><br>
+    <a asp-area="" asp-controller="articles" asp-action="myarticles">My Articles</a>
+</div>

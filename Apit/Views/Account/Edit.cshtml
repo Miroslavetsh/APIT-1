@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNetCore.Html
+@using System.Text
+@model EditUserViewModel
+
+@{
+    Layout = "_Layout";
+    var user = await UserManager.GetUserAsync(User);
+    var resultMessage = Model?.ResultMessage ?? "";
+
+    IHtmlContent AddOptionsFrom<TEnum>(TEnum selected) where TEnum : Enum
+    {
+        var enumOptionsArray = Enum.GetValues(typeof(TEnum));
+        var options = new StringBuilder();
+
+        foreach (TEnum item in enumOptionsArray)
+        {
+            string propValue = item.ToString().Replace('_', ' ');
+            string selectedOption = Equals(item, selected) ? "selected=\"selected\"" : "";
+            options.Append($"<option value=\"{item}\" {selectedOption}>{propValue}</option>");
+        }
+        return Html.Raw(options.ToString());
+    }
+}
+
+
+<div>
+    <h1>Edit yourself</h1>
+    <form asp-area="" asp-controller="account" asp-action="Edit" method="post">
+        <div asp-validation-summary="All">
+            <div>
+                <label asp-for="ProfilePhoto"></label>
+                <input asp-for="ProfilePhoto" type="file"/>
+                <span asp-validation-for="ProfilePhoto"></span>
+            </div>
+            <div>
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" type="text" accept=".png, .jpg, .jpeg, .webp, .bmp" placeholder="@user.FirstName"/>
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div>
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" type="text" placeholder="@user.LastName"/>
+                <span asp-validation-for="LastName"></span>
+            </div>
+            <div>
+                <label asp-for="MiddleName"></label>
+                <input asp-for="MiddleName" type="text" placeholder="@user.MiddleName"/>
+                <span asp-validation-for="MiddleName"></span>
+            </div>
+
+            <div>
+                <label asp-for="WorkingFor"></label>
+                <input asp-for="WorkingFor" type="text" placeholder="@user.WorkingFor"/>
+                <span asp-validation-for="WorkingFor"></span>
+            </div>
+            <div>
+                <label asp-for="ScienceDegree"></label>
+                <select asp-for="ScienceDegree">
+                    @(AddOptionsFrom<ScienceDegree>(@user.ScienceDegree))
+                </select>
+                <span asp-validation-for="ScienceDegree"></span>
+            </div>
+            <div>
+                <label asp-for="AcademicTitle"></label>
+                <select asp-for="AcademicTitle">
+                    @(AddOptionsFrom<AcademicTitle>(@user.AcademicTitle))
+                </select>
+                <span asp-validation-for="AcademicTitle"></span>
+            </div>
+            <div>
+                <label asp-for="ParticipationForm"></label>
+                <select asp-for="ParticipationForm">
+                    @(AddOptionsFrom<ParticipationForm>(@user.ParticipationForm))
+                </select>
+                <span asp-validation-for="ParticipationForm"></span>
+            </div>
+
+            <div>
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" type="text" placeholder="@user.PhoneNumber"/>
+                <span asp-validation-for="PhoneNumber"></span>
+            </div>
+
+            <div>
+                <input type="submit" value="Save changes">
+                <span>@resultMessage</span>
+            </div>
+        </div>
+    </form>
+</div>

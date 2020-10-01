@@ -1,3 +1,14 @@
-﻿@using Apit
-@using Apit.Models
+﻿@using System.Globalization
+@using Apit
+@using BusinessLayer
+@using BusinessLayer.Models
+@using BusinessLayer.Repositories
+@using Microsoft.AspNetCore.Identity
+@using DatabaseLayer.Entities
+@using DatabaseLayer.Enums
+@using Microsoft.AspNetCore.Mvc.Razor
+
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager

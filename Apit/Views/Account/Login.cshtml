@@ -1,0 +1,32 @@
+﻿@model BusinessLayer.Models.LoginViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div>
+    <h1>Log In</h1>
+    <form asp-area="" asp-controller="account" asp-action="login"
+          method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <div asp-validation-summary="All">
+            <div>
+                <label asp-for="Email" autofocus></label>
+                <input asp-for="Email" type="text"/>
+                <span asp-validation-for="Email"></span>
+            </div>
+            <div>
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password"/>
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div>
+                <label asp-for="RememberMe"></label>
+                <input asp-for="RememberMe" type="checkbox"/>
+                <span asp-validation-for="RememberMe"></span>
+            </div>
+            <div>
+                <input type="submit" value="Sign In">
+            </div>
+        </div>
+    </form>
+</div>

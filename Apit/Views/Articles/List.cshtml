@@ -1,0 +1,18 @@
+﻿@model ArticlesListViewModel
+
+
+<h1>Articles list</h1>
+<p>Lorem ipsum bro</p>
+
+@foreach (var article in Model.Collection)
+{
+    <article>
+        <h3>@article.Title</h3>
+        <p>
+            <span>Topic:</span>@article.Topic?.Name
+        </p>
+        <p>@article.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
+        <a asp-controller="articles" asp-action="p" asp-route-id="@article.Id.ToString()">Read more</a>
+    </article>
+    <br/>
+}

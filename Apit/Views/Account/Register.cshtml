@@ -1,0 +1,72 @@
+﻿@using DatabaseLayer.Enums
+@model BusinessLayer.Models.RegisterViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div>
+    <h1>Register</h1>
+    <form asp-area="" asp-controller="account" asp-action="register"
+          method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <div asp-validation-summary="All">
+            <div>
+                <label asp-for="FirstName" autofocus></label>
+                <input asp-for="FirstName" type="text"/>
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div>
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" type="text"/>
+                <span asp-validation-for="LastName"></span>
+            </div>
+            <div>
+                <label asp-for="MiddleName"></label>
+                <input asp-for="MiddleName" type="text"/>
+                <span asp-validation-for="MiddleName"></span>
+            </div>
+
+            <div>
+                <label asp-for="WorkingFor"></label>
+                <input asp-for="WorkingFor" type="text"/>
+                <span asp-validation-for="WorkingFor"></span>
+            </div>
+            <div>
+                <label asp-for="ScienceDegree"></label>
+                <select asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()"></select>
+                <span asp-validation-for="ScienceDegree"></span>
+            </div>
+            <div>
+                <label asp-for="AcademicTitle"></label>
+                <select asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()"></select>
+                <span asp-validation-for="AcademicTitle"></span>
+            </div>
+            <div>
+                <label asp-for="ParticipationForm"></label>
+                <select asp-for="ParticipationForm" asp-items="Html.GetEnumSelectList<ParticipationForm>()"></select>
+                <span asp-validation-for="ParticipationForm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Email"></label>
+                <input asp-for="Email" type="email"/>
+                <span asp-validation-for="Email"></span>
+            </div>
+
+            <div>
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password"/>
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div>
+                <label asp-for="PasswordConfirm"></label>
+                <input asp-for="PasswordConfirm" type="password"/>
+                <span asp-validation-for="PasswordConfirm"></span>
+            </div>
+
+            <div>
+                <input type="submit" value="Register">
+            </div>
+        </div>
+    </form>
+</div>

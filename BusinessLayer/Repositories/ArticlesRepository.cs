@@ -50,9 +50,11 @@ namespace BusinessLayer.Repositories
         {
             if (entity == null) throw new ArgumentNullException();
 
-            if (_ctx.Articles.Any(a => a.Id == entity.Id))
+            var guidId = Guid.Parse(entity.Id);
+            var instance = _ctx.Articles.FirstOrDefault(a => a.Id == guidId);
+
+            if (instance != null)
             {
-                var instance = _ctx.Articles.FirstOrDefault(a => a.Id == entity.Id);
                 ConvertViewModelToDbObject(entity, instance);
             }
             else
@@ -76,8 +78,8 @@ namespace BusinessLayer.Repositories
         {
             return new ArticleViewModel
             {
-                Id = article.Id,
-                Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.Id),
+                Id = article.Id.ToString(),
+                Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.TopicId),
                 Creator = _ctx.Users.FirstOrDefault(u => u.Id == article.CreatorId),
                 Title = article.Title,
                 Status = article.Status,
@@ -93,7 +95,7 @@ namespace BusinessLayer.Repositories
 
         private static void ConvertViewModelToDbObject(ArticleViewModel model, Article instance)
         {
-            instance.Id = model.Id;
+            instance.Id = Guid.Parse(model.Id);
             instance.TopicId = model.Topic.Id;
             instance.CreatorId = model.Creator.Id;
             instance.Title = model.Title;

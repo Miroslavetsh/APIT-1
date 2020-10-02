@@ -12,7 +12,8 @@
             <span>Topic:</span>@article.Topic?.Name
         </p>
         <p>@article.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
-        <a asp-controller="articles" asp-action="p" asp-route-id="@article.Id.ToString()">Read more</a>
+        @Html.ActionLink("Read more", "p", "articles",
+            new {Id = article.Id}, null)
     </article>
     <br/>
 }

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,19 +27,25 @@ namespace Apit.Controllers
             _dataManager = dataManager;
         }
 
-        [AllowAnonymous]
-        public IActionResult P(Guid id, string returnUrl)
-        {
-            if (_dataManager.Articles.IsExist(id))
-            {
-                Console.WriteLine("Article ID: " + id);
-                return View(_dataManager.Articles.GetById(id));
-            }
 
-            return Redirect("error");
+        public async Task<IActionResult> P(string id = "", string returnUrl = "")
+        {
+            Console.WriteLine("ID: " + id);
+            var guidId = Guid.Parse(id);
+
+            ArticleViewModel article;
+
+            article = string.IsNullOrWhiteSpace(id)
+                ? _dataManager.Articles.GetLatest(1).FirstOrDefault()
+                : _dataManager.Articles.GetById(guidId);
+
+            if (article == null) return Error();
+
+            // var userId = _userManager.GetUserId(User);
+
+            return View(article);
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> List(ArticlesListViewModel model)
         {
             ViewData["Title"] = "Articles page title";
@@ -49,12 +55,16 @@ namespace Apit.Controllers
                 case "my":
                 {
                     var user = await _userManager.GetUserAsync(User);
-                    model.Collection = _dataManager.Articles.GetByUser(user.Id);
+                    model.Collection = _dataManager.Articles.GetByUser(user.Id)
+                        .OrderBy(a => a.DateLastModified).Reverse();
                     break;
                 }
                 default:
-                    model.Collection = _dataManager.Articles.GetAll();
+                {
+                    model.Collection = _dataManager.Articles.GetAll()
+                        .OrderBy(a => a.DateLastModified).Reverse();
                     break;
+                }
             }
 
             return View(model);

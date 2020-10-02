@@ -6,6 +6,7 @@ namespace DatabaseLayer.Entities
 {
     public class Article
     {
+        //TODO: Convert Id from Guid to String format
         [Required] public Guid Id { get; set; }
         [Required] public Guid TopicId { get; set; }
         [Required] public string CreatorId { get; set; }

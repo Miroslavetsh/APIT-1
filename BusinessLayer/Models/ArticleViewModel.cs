@@ -8,7 +8,10 @@ namespace BusinessLayer.Models
 {
     public class ArticleViewModel
     {
-        public Guid Id { get; set; }
+        public bool IsMine { get; set; }
+
+        public string Id { get; set; }
+
         public Topic Topic { get; set; }
         public User Creator { get; set; }
 

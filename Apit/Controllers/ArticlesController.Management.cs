@@ -36,7 +36,7 @@ namespace Apit.Controllers
             {
                 _dataManager.Articles.Create(new ArticleViewModel
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     Topic = topic,
                     Creator = user,
 
@@ -65,7 +65,7 @@ namespace Apit.Controllers
             if (model.Creator != user)
                 ModelState.AddModelError(nameof(ArticleViewModel.Creator),
                     "User access denied");
-            
+
             return View();
         }
 

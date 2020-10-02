@@ -6,7 +6,7 @@
     var allTopics = DataManager.Topics.GetAll().ToArray();
 }
 
-<form asp-area="" asp-controller="articles" asp-action="create"
+<form asp-controller="articles" asp-action="create"
       method="post" asp-route-returnUrl="/">
     <div asp-validation-summary="All">
         <div>
@@ -16,7 +16,7 @@
                 <select asp-for="Topic">
                     @foreach (var topic in allTopics)
                     {
-                        <option value="@topic.Id">@topic.Name</option>
+                        <option value="@topic.Name">@topic.Name</option>
                     }
                 </select>
                 <div>
@@ -27,11 +27,12 @@
             }
             else
             {
+                //TODO: possible vulnerability or unexpected situation on view
                 <input asp-for="CreateNewTopic" type="checkbox" checked="checked" style="display: none">
                 <input asp-for="Topic" type="text">
             }
         </div>
-        
+
         <div>
             <label asp-for="KeyWords"></label>
             <input asp-for="KeyWords" type="text">

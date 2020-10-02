@@ -4,6 +4,12 @@
 <h1>Articles list</h1>
 <p>Lorem ipsum bro</p>
 
+@if (Model.Collection.Count() == 0)
+{
+    <h2>Empty.</h2>
+}
+else
+{
 @foreach (var article in Model.Collection)
 {
     <article>
@@ -12,8 +18,8 @@
             <span>Topic:</span>@article.Topic?.Name
         </p>
         <p>@article.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
-        @Html.ActionLink("Read more", "p", "articles",
-            new {Id = article.Id}, null)
+        @Html.ActionLink("Read more", "p", "articles", new {Id = article.Id}, null)
     </article>
     <br/>
+}
 }

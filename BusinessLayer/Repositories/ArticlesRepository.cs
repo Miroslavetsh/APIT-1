@@ -69,7 +69,7 @@ namespace BusinessLayer.Repositories
 
         public void Delete(Guid id)
         {
-            _ctx.Articles.Remove(new Article {Id = id});
+            _ctx.Articles.Remove(_ctx.Articles.First(a => a.Id == id));
             _ctx.SaveChanges();
         }
 

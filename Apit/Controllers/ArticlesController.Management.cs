@@ -20,9 +20,9 @@ namespace Apit.Controllers
             var user = await _userManager.GetUserAsync(User);
             var dateNow = DateTime.Now;
 
-            var topic = model.CreateNewTopic
-                ? new Topic {Id = new Guid(), Name = model.Topic}
-                : _dataManager.Topics.GetById(Guid.Parse(model.Topic));
+            var topic = model.CreateNewTopic && !_dataManager.Topics.IsExist(model.Topic)
+                ? new Topic {Id = Guid.NewGuid(), Name = model.Topic}
+                : _dataManager.Topics.GetByName(model.Topic);
 
             if (model.CreateNewTopic) _dataManager.Topics.Create(topic);
 
@@ -45,32 +45,34 @@ namespace Apit.Controllers
                     KeyWords = model.KeyWords.Split(' ', ',', ';'),
 
                     Title = model.Title,
-                    HTML = string.IsNullOrWhiteSpace(model.TextHTML) ? model.TextHTML : " ==== Empty ===="
+                    HTML = string.IsNullOrWhiteSpace(model.TextHTML) ? " ==== Empty ====" : model.TextHTML
                 });
             }
 
-            return Redirect("list");
+            return Redirect("/articles/list");
         }
 
         [Authorize]
         public IActionResult Edit(string id)
         {
-            return View(_dataManager.Articles.GetById(Guid.Parse(id)));
+            var model = _dataManager.Articles.GetById(Guid.Parse(id));
+            return View(model);
         }
 
         [HttpPost, Authorize]
         public async Task<IActionResult> Edit(ArticleViewModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (model.Creator != user)
-                ModelState.AddModelError(nameof(ArticleViewModel.Creator),
-                    "User access denied");
+            //TODO: Edit page response 
+            // var user = await _userManager.GetUserAsync(User);
+            // if (model.Creator != user)
+            //     ModelState.AddModelError(nameof(ArticleViewModel.Creator),
+            //         "User access denied");
 
             return View();
         }
 
         [HttpPost, Authorize]
-        public async Task<IActionResult> Delete(string id, string returnUrl)
+        public async Task<IActionResult> Delete(string id, string returnUrl = null)
         {
             var articleId = Guid.Parse(id);
             if (_dataManager.Articles.IsExist(articleId))
@@ -78,16 +80,19 @@ namespace Apit.Controllers
                 var article = _dataManager.Articles.GetById(articleId);
                 var user = await _userManager.GetUserAsync(User);
 
-                if (user == article.Creator) _dataManager.Articles.Delete(articleId);
+                if (user == article.Creator)
+                {
+                    _dataManager.Articles.Delete(articleId);
+                }
                 else
-                    ModelState.AddModelError(nameof(ArticleViewModel.Creator),
-                        "User access denied");
+                {
+                    ModelState.AddModelError(nameof(ArticleViewModel.Creator), "User access denied");
+                }
             }
             else
-                ModelState.AddModelError(
-                    nameof(ArticleViewModel.Id), "Article not exist");
+                ModelState.AddModelError(nameof(ArticleViewModel.Id), "Article not exist");
 
-            return Redirect(returnUrl ?? "list");
+            return Redirect(returnUrl ?? "/");
         }
     }
 }

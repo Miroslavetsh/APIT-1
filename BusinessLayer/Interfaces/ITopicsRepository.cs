@@ -5,6 +5,7 @@ namespace BusinessLayer.Interfaces
 {
     public interface ITopicsRepository : ICollectedData<Guid, Topic>
     {
+        bool IsExist(string name);
         Topic GetByName(string name);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BusinessLayer.Interfaces;
 using DatabaseLayer;
@@ -27,6 +28,9 @@ namespace BusinessLayer.Repositories
 
         public void Create(User entity)
         {
+            if (entity == null) throw new ArgumentNullException();
+
+            //TODO: _ctx.Entry() => !possible! not works
             _ctx.Entry(entity).State = entity.Id == default ? EntityState.Added : EntityState.Modified;
             _ctx.SaveChanges();
         }

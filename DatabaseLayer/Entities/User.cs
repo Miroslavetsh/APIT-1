@@ -18,7 +18,7 @@ namespace DatabaseLayer.Entities
         public string ProfilePhotoPath { get; set; }
 
 
-        public static bool operator ==(User a, User b) => a != null && b != null && a.Id == b.Id;
+        public static bool operator ==(User a, User b) => a?.Id == b?.Id;
         public static bool operator !=(User a, User b) => !(a == b);
 
         public override int GetHashCode() => Id.GetHashCode();

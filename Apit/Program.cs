@@ -11,12 +11,13 @@ namespace Apit
         {
             var host = CreateHostBuilder(args).Build();
 
-            // Init test data in database (remove it on Production) 
+            // // Init test data in database (remove it on Production) 
             // using (var scope = host.Services.CreateScope())
             // {
             //     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             //     TestData.ClearDatabase(context);
-            //     TestData.Apply(context);
+            //
+            //     // TestData.Apply(context);
             // }
 
             host.Run();

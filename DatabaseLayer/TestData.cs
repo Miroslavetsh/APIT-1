@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Linq;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +18,7 @@ namespace DatabaseLayer
 
         public static void Apply(AppDbContext context)
         {
-            ApplyUsers(context);
+            // ApplyUsers(context);
 
             ApplyTopics(context);
 
@@ -37,7 +36,7 @@ namespace DatabaseLayer
 
             context.Users.Add(new User()
             {
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, "test1234"),
+                Id = Guid.NewGuid().ToString(),
                 FirstName = "Test",
                 LastName = "Test",
                 Email = "test@test.com",
@@ -45,7 +44,7 @@ namespace DatabaseLayer
             });
             context.Users.Add(new User()
             {
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, "1234"),
+                Id = Guid.NewGuid().ToString(),
                 FirstName = "Іван",
                 LastName = "Креативний",
                 MiddleName = "Поповий",
@@ -54,7 +53,7 @@ namespace DatabaseLayer
             });
             context.Users.Add(new User()
             {
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, "1234"),
+                Id = Guid.NewGuid().ToString(),
                 FirstName = "Ліліт",
                 LastName = "Ковбасенко",
                 MiddleName = "Батьківновна",
@@ -63,7 +62,7 @@ namespace DatabaseLayer
             });
             context.Users.Add(new User()
             {
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, "1234"),
+                Id = Guid.NewGuid().ToString(),
                 FirstName = "Василько",
                 LastName = "Василенко",
                 MiddleName = "Васильович",
@@ -158,4 +157,3 @@ namespace DatabaseLayer
         }
     }
 }
-*/

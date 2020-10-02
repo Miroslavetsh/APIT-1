@@ -3,14 +3,17 @@
 @{
     Layout = "_Layout";
     var article = Model;
+    var isMine = UserManager.GetUserId(User) == article.Creator.Id;
 }
 
-@if (Model.IsMine)
+@if (isMine)
 {
-<div>
-    <a asp-controller="articles" asp-action="edit" asp-route-id="@article.Id">Edit</a>
-    <a asp-controller="articles" asp-action="delete" asp-route-id="@article.Id">Delete</a>
-</div>
+    <div>
+        <a asp-controller="articles" asp-action="edit" asp-route-id="@article.Id">Edit</a>
+        <form asp-controller="articles" asp-action="delete" asp-route-id="@article.Id">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
 }
 
 <article>

@@ -28,22 +28,15 @@ namespace Apit.Controllers
         }
 
 
-        public async Task<IActionResult> P(string id = "", string returnUrl = "")
+        public IActionResult P(string id = "", string returnUrl = "")
         {
-            Console.WriteLine("ID: " + id);
             var guidId = Guid.Parse(id);
 
-            ArticleViewModel article;
-
-            article = string.IsNullOrWhiteSpace(id)
+            var article = string.IsNullOrWhiteSpace(id)
                 ? _dataManager.Articles.GetLatest(1).FirstOrDefault()
                 : _dataManager.Articles.GetById(guidId);
 
-            if (article == null) return Error();
-
-            // var userId = _userManager.GetUserId(User);
-
-            return View(article);
+            return article == null ? Error() : View(article);
         }
 
         public async Task<IActionResult> List(ArticlesListViewModel model)

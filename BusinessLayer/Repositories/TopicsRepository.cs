@@ -29,8 +29,8 @@ namespace BusinessLayer.Repositories
         public void Create(Topic entity)
         {
             if (entity == null) throw new ArgumentNullException();
-            
-            _ctx.Add(entity).State = entity.Id == default ? EntityState.Added : EntityState.Modified;
+
+            _ctx.Add(entity);
             _ctx.SaveChanges();
         }
 

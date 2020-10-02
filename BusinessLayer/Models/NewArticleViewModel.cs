@@ -7,8 +7,9 @@ namespace BusinessLayer.Models
         public bool UseFromFile { get; set; }
         public byte[] ArticleFile { get; set; }
 
+        [Display(Name = "Topic")] public string TopicId { get; set; }
         public bool CreateNewTopic { get; set; }
-        [Required] public string Topic { get; set; }
+        [Display(Name = "Create new topic")] public string NewTopicName { get; set; }
         [Required] public string KeyWords { get; set; }
 
         [Required] public string Title { get; set; }

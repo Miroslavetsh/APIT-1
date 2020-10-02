@@ -10,26 +10,24 @@
       method="post" asp-route-returnUrl="/">
     <div asp-validation-summary="All">
         <div>
-            <label asp-for="Topic"></label>
+            <label asp-for="TopicId"></label>
             @if (allTopics.Any())
             {
-                <select asp-for="Topic">
+                <select asp-for="TopicId">
                     @foreach (var topic in allTopics)
                     {
-                        <option value="@topic.Name">@topic.Name</option>
+                        <option value="@topic.Id">@topic.Name</option>
                     }
                 </select>
                 <div>
                     <label asp-for="CreateNewTopic"></label>
                     <input asp-for="CreateNewTopic" type="checkbox">
-                    <input asp-for="Topic" type="text">
+                    <input asp-for="NewTopicName" type="text">
                 </div>
             }
             else
             {
-                //TODO: possible vulnerability or unexpected situation on view
-                <input asp-for="CreateNewTopic" type="checkbox" checked="checked" style="display: none">
-                <input asp-for="Topic" type="text">
+                <input asp-for="NewTopicName" type="text">
             }
         </div>
 

@@ -20,11 +20,23 @@ namespace Apit.Controllers
             var user = await _userManager.GetUserAsync(User);
             var dateNow = DateTime.Now;
 
-            var topic = model.CreateNewTopic && !_dataManager.Topics.IsExist(model.Topic)
-                ? new Topic {Id = Guid.NewGuid(), Name = model.Topic}
-                : _dataManager.Topics.GetByName(model.Topic);
+            // Get topic
+            var topic = model.CreateNewTopic
+                        && !string.IsNullOrWhiteSpace(model.NewTopicName)
+                ? _dataManager.Topics.IsExist(model.NewTopicName)
+                    ? _dataManager.Topics.GetByName(model.NewTopicName)
+                    : new Topic {Id = Guid.NewGuid(), Name = model.NewTopicName}
+                : _dataManager.Topics.GetById(Guid.Parse(model.TopicId));
 
-            if (model.CreateNewTopic) _dataManager.Topics.Create(topic);
+            if (topic == null)
+            {
+                ModelState.AddModelError(nameof(NewArticleViewModel.NewTopicName), "Topic not defined");
+                return View(model);
+            }
+
+            // Add topic to DB if it is new one
+            if (!_dataManager.Topics.IsExist(topic.Id))
+                _dataManager.Topics.Create(topic);
 
             if (model.UseFromFile)
             {
@@ -60,7 +72,7 @@ namespace Apit.Controllers
         }
 
         [HttpPost, Authorize]
-        public async Task<IActionResult> Edit(ArticleViewModel model)
+        public IActionResult Edit(ArticleViewModel model)
         {
             //TODO: Edit page response 
             // var user = await _userManager.GetUserAsync(User);
@@ -80,14 +92,8 @@ namespace Apit.Controllers
                 var article = _dataManager.Articles.GetById(articleId);
                 var user = await _userManager.GetUserAsync(User);
 
-                if (user == article.Creator)
-                {
-                    _dataManager.Articles.Delete(articleId);
-                }
-                else
-                {
-                    ModelState.AddModelError(nameof(ArticleViewModel.Creator), "User access denied");
-                }
+                if (user == article.Creator) _dataManager.Articles.Delete(articleId);
+                else ModelState.AddModelError(nameof(ArticleViewModel.Creator), "User access denied");
             }
             else
                 ModelState.AddModelError(nameof(ArticleViewModel.Id), "Article not exist");

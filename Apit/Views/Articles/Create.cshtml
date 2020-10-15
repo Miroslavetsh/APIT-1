@@ -10,6 +10,12 @@
       method="post" asp-route-returnUrl="/">
     <div asp-validation-summary="All">
         <div>
+            <label asp-for="UniqueAddress"></label>
+            <input asp-for="UniqueAddress" type="text" placeholder="@Model.UniqueAddress">
+            <span asp-validation-for="UniqueAddress"></span>
+        </div>
+        
+        <div>
             <label asp-for="TopicId"></label>
             @if (allTopics.Any())
             {

@@ -34,13 +34,14 @@ namespace Apit
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<ITopicsRepository, TopicsRepository>();
             services.AddTransient<IArticlesRepository, ArticlesRepository>();
+            services.AddTransient<IConferencesRepository, ConferenceRepository>();
             services.AddScoped<DataManager>();
 
             // Connect to our database (edit connection string from "appsettings.json" file)
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly("DatabaseLayer")));
-            
+
             services.AddDefaultIdentity<User>(options =>
             {
                 options.User.RequireUniqueEmail = true;

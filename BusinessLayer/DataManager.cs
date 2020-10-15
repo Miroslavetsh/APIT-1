@@ -7,6 +7,7 @@ namespace BusinessLayer
         public IUsersRepository Users { get; }
         public IArticlesRepository Articles { get; }
         public ITopicsRepository Topics { get; }
+        public IConferencesRepository Conferences { get; }
 
 
         public DataManager(IUsersRepository users, IArticlesRepository articles, ITopicsRepository topics)

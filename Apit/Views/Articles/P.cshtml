@@ -10,7 +10,8 @@
 {
     <div>
         <a asp-controller="articles" asp-action="edit" asp-route-id="@article.Id">Edit</a>
-        <form asp-controller="articles" asp-action="delete" asp-route-id="@article.Id">
+        <form asp-controller="articles" asp-action="delete"
+              asp-route-id="@article.Id" asp-route-returnUrl="@Context.Request.Path">
             <button type="submit">Delete</button>
         </form>
     </div>

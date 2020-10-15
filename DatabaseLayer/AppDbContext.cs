@@ -18,6 +18,11 @@ namespace DatabaseLayer
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Article> Articles { get; set; }
 
+        public DbSet<Conference> Conferences { get; set; }
+
+        public DbSet<ConferenceParticipant> ConfParticipants { get; set; }
+        public DbSet<ConferenceAdmin> ConfAdmins { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,8 +36,9 @@ namespace DatabaseLayer
                 NormalizedUserName = "ADMIN",
             });
 
+            /*
             var userId = Guid.NewGuid().ToString();
-            builder.Entity<User>().HasData(new User
+            builder.Entity<User>().HasData(new User()
             {
                 Id = userId,
                 FirstName = "Big",
@@ -47,7 +53,9 @@ namespace DatabaseLayer
 
                 ScienceDegree = ScienceDegree.First,
                 AcademicTitle = AcademicTitle.BestOfTheBest,
-                ParticipationForm = ParticipationForm.Admin
+                ParticipationForm = ParticipationForm.Admin,
+
+                ProfileAddress = "admin-the-best"
             });
 
             builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
@@ -55,6 +63,7 @@ namespace DatabaseLayer
                 RoleId = roleId,
                 UserId = userId
             });
+            */
         }
     }
 }

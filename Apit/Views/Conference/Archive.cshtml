@@ -1,0 +1,23 @@
+@model IEnumerable<ConferenceViewModel>
+
+<h1>Articles list</h1>
+
+@if (!Model.Any())
+{
+    <h2>Empty.</h2>
+}
+else
+{
+    @foreach (var conference in Model)
+    {
+        <article>
+            <h3>@conference.Title</h3>
+            <p>
+                <span>Topic:</span>@conference.ShortDescription
+            </p>
+            <p>@conference.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
+            @Html.ActionLink("Read more", "index", "conference", conference.UniqueAddress, null)
+        </article>
+        <br/>
+    }
+}

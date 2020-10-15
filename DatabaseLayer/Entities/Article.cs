@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DatabaseLayer.Enums;
 
@@ -8,6 +9,7 @@ namespace DatabaseLayer.Entities
     {
         //TODO: Convert Id from Guid to String format
         [Required] public Guid Id { get; set; }
+        public string UniqueAddress { get; set; }
         [Required] public Guid TopicId { get; set; }
         [Required] public string CreatorId { get; set; }
 
@@ -29,7 +31,10 @@ namespace DatabaseLayer.Entities
         /// </summary>
         public string DataFile { get; set; }
 
-        [DataType(DataType.Time)] public DateTime DateCreated { get; set; }
-        [DataType(DataType.Time)] public DateTime DateLastModified { get; set; }
+
+        public Conference Conference { get; set; }
+
+        [DataType(DataType.DateTime)] public DateTime DateCreated { get; set; }
+        [DataType(DataType.DateTime)] public DateTime DateLastModified { get; set; }
     }
 }

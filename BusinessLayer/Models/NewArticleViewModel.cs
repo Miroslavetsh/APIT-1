@@ -4,6 +4,8 @@ namespace BusinessLayer.Models
 {
     public class NewArticleViewModel
     {
+        public string UniqueAddress { get; set; }
+
         public bool UseFromFile { get; set; }
         public byte[] ArticleFile { get; set; }
 

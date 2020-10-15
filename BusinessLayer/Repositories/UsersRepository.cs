@@ -32,13 +32,13 @@ namespace BusinessLayer.Repositories
 
             //TODO: _ctx.Entry() => !possible! not works
             _ctx.Entry(entity).State = entity.Id == default ? EntityState.Added : EntityState.Modified;
-            _ctx.SaveChanges();
+            SaveChanges();
         }
 
         public void Delete(string id)
         {
             _ctx.Users.Remove(new User {Id = id});
-            _ctx.SaveChanges();
+            SaveChanges();
         }
     }
 }

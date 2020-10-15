@@ -1,8 +1,6 @@
 ﻿@model ArticlesListViewModel
 
-
 <h1>Articles list</h1>
-<p>Lorem ipsum bro</p>
 
 @if (Model.Collection.Count() == 0)
 {
@@ -10,16 +8,16 @@
 }
 else
 {
-@foreach (var article in Model.Collection)
-{
-    <article>
-        <h3>@article.Title</h3>
-        <p>
-            <span>Topic:</span>@article.Topic?.Name
-        </p>
-        <p>@article.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
-        @Html.ActionLink("Read more", "p", "articles", new {Id = article.Id}, null)
-    </article>
-    <br/>
-}
+    @foreach (var article in Model.Collection)
+    {
+        <article>
+            <h3>@article.Title</h3>
+            <p>
+                <span>Topic:</span>@article.Topic?.Name
+            </p>
+            <p>@article.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
+            <a asp-action="p" asp-controller="articles" asp-route-id="@article.UniqueAddress">Read mode</a>
+        </article>
+        <br/>
+    }
 }

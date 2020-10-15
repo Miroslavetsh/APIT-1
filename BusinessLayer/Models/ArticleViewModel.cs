@@ -8,7 +8,8 @@ namespace BusinessLayer.Models
 {
     public class ArticleViewModel
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+        public string UniqueAddress { get; set; }
 
         public Topic Topic { get; set; }
         public User Creator { get; set; }
@@ -20,7 +21,9 @@ namespace BusinessLayer.Models
 
         public string HTML { get; set; }
 
-        [DataType(DataType.Time)] public DateTime DateCreated { get; set; }
-        [DataType(DataType.Time)] public DateTime DateLastModified { get; set; }
+        [DataType(DataType.DateTime)] public DateTime DateCreated { get; set; }
+        [DataType(DataType.DateTime)] public DateTime DateLastModified { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }

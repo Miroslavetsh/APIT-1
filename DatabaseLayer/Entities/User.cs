@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Identity;
 
@@ -15,9 +16,10 @@ namespace DatabaseLayer.Entities
         public AcademicTitle AcademicTitle { get; set; }
         public ParticipationForm ParticipationForm { get; set; }
 
+        [Required] public string ProfileAddress { get; set; }
         public string ProfilePhotoPath { get; set; }
 
-
+        [NotMapped] public string FullName => $"{LastName} {FirstName} {MiddleName}";
         public static bool operator ==(User a, User b) => a?.Id == b?.Id;
         public static bool operator !=(User a, User b) => !(a == b);
 

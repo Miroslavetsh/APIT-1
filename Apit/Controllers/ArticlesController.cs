@@ -3,39 +3,31 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using BusinessLayer.Models;
 using BusinessLayer;
 using DatabaseLayer.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Apit.Controllers
 {
     public partial class ArticlesController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
 
 
-        public ArticlesController(ILogger<HomeController> logger,
-            UserManager<User> userManager, DataManager dataManager)
+        public ArticlesController(UserManager<User> userManager, DataManager dataManager)
         {
-            _logger = logger;
             _userManager = userManager;
             _dataManager = dataManager;
         }
 
 
-        public IActionResult P(string id = "", string returnUrl = "")
+        public IActionResult P(string id)
         {
-            var guidId = Guid.Parse(id);
-
-            var article = string.IsNullOrWhiteSpace(id)
-                ? _dataManager.Articles.GetLatest(1).FirstOrDefault()
-                : _dataManager.Articles.GetById(guidId);
-
+            if (string.IsNullOrWhiteSpace(id)) Error();
+            Console.WriteLine("ID: " + id);
+            var article = _dataManager.Articles.GetByUniqueAddress(id);
             return article == null ? Error() : View(article);
         }
 
@@ -48,12 +40,13 @@ namespace Apit.Controllers
                 case "my":
                 {
                     var user = await _userManager.GetUserAsync(User);
-                    model.Collection = _dataManager.Articles.GetByUser(user.Id)
+                    model.Collection = _dataManager.Articles.GetByCreator(user.Id)
                         .OrderBy(a => a.DateLastModified).Reverse();
                     break;
                 }
                 default:
                 {
+                    model.Filter = "all";
                     model.Collection = _dataManager.Articles.GetAll()
                         .OrderBy(a => a.DateLastModified).Reverse();
                     break;

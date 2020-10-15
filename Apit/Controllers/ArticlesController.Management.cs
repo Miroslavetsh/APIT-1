@@ -11,7 +11,10 @@ namespace Apit.Controllers
     {
         public IActionResult Create()
         {
-            return View();
+            return View(new NewArticleViewModel
+            {
+                UniqueAddress = _dataManager.Articles.GenerateUniqueAddress()
+            });
         }
 
         [HttpPost, Authorize]
@@ -30,13 +33,23 @@ namespace Apit.Controllers
 
             if (topic == null)
             {
-                ModelState.AddModelError(nameof(NewArticleViewModel.NewTopicName), "Topic not defined");
+                ModelState.AddModelError(
+                    nameof(NewArticleViewModel.NewTopicName),
+                    "Topic not defined");
                 return View(model);
             }
 
             // Add topic to DB if it is new one
             if (!_dataManager.Topics.IsExist(topic.Id))
                 _dataManager.Topics.Create(topic);
+
+            if (_dataManager.Conferences.GetByUniqueAddress(model.UniqueAddress) == null)
+            {
+                ModelState.AddModelError(
+                    nameof(NewArticleViewModel.UniqueAddress),
+                    "This address already used");
+                return View(model);
+            }
 
             if (model.UseFromFile)
             {
@@ -48,7 +61,8 @@ namespace Apit.Controllers
             {
                 _dataManager.Articles.Create(new ArticleViewModel
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
+                    UniqueAddress = model.UniqueAddress,
                     Topic = topic,
                     Creator = user,
 
@@ -86,19 +100,27 @@ namespace Apit.Controllers
         [HttpPost, Authorize]
         public async Task<IActionResult> Delete(string id, string returnUrl = null)
         {
-            var articleId = Guid.Parse(id);
-            if (_dataManager.Articles.IsExist(articleId))
+            try
             {
-                var article = _dataManager.Articles.GetById(articleId);
-                var user = await _userManager.GetUserAsync(User);
+                var articleId = Guid.Parse(id);
+                if (_dataManager.Articles.IsExist(articleId))
+                {
+                    var article = _dataManager.Articles.GetById(articleId);
+                    var user = await _userManager.GetUserAsync(User);
 
-                if (user == article.Creator) _dataManager.Articles.Delete(articleId);
-                else ModelState.AddModelError(nameof(ArticleViewModel.Creator), "User access denied");
+                    if (user == article.Creator) _dataManager.Articles.Delete(articleId);
+                    else ModelState.AddModelError(nameof(ArticleViewModel.Creator), "User access denied");
+                }
+                else
+                    ModelState.AddModelError(nameof(ArticleViewModel.Id), "Article not exist");
+
+                return Redirect(returnUrl ?? "/");
             }
-            else
-                ModelState.AddModelError(nameof(ArticleViewModel.Id), "Article not exist");
-
-            return Redirect(returnUrl ?? "/");
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Error();
+            }
         }
     }
 }

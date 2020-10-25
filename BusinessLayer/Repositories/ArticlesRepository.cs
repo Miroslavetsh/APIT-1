@@ -13,12 +13,10 @@ namespace BusinessLayer.Repositories
     public class ArticlesRepository : IArticlesRepository
     {
         private readonly AppDbContext _ctx;
-        private readonly IConferencesRepository _conferences;
 
-        public ArticlesRepository(AppDbContext context, IConferencesRepository conferences)
+        public ArticlesRepository(AppDbContext context)
         {
             _ctx = context;
-            _conferences = conferences;
         }
 
         public string GenerateUniqueAddress() => DataUtil.GenerateUniqueAddress(this, 8);
@@ -62,7 +60,6 @@ namespace BusinessLayer.Repositories
             if (entity == null) throw new ArgumentNullException();
 
             _ctx.Articles.Add(entity);
-            _conferences.AddArticle(entity);
 
             SaveChanges();
         }

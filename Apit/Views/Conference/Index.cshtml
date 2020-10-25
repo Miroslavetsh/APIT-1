@@ -5,25 +5,32 @@
     var user = await UserManager.GetUserAsync(User);
 }
 
-@if (Model.Participants.Contains(user))
+@if (Model == null)
 {
-    <p>You arleady subscribed</p>
-    <button>Unsubscribe</button>
+    <h2>Is empty yet.</h2>
 }
 else
 {
-    <button>Join now!</button>
-}
+    @if (Model.Participants.Contains(user))
+    {
+        <p>You arleady subscribed</p>
+        <button>Unsubscribe</button>
+    }
+    else
+    {
+        <button>Join now!</button>
+    }
 
-<div>
-    <p>@Model.Description</p>
     <div>
-        <h3>Admins</h3>
-        <ul>
-            @foreach (var admin in Model.Admins)
-            {
-                <li>@admin.FullName</li>
-            }
-        </ul>
+        <p>@Model.Description</p>
+        <div>
+            <h3>Admins</h3>
+            <ul>
+                @foreach (var admin in Model.Admins)
+                {
+                    <li>@admin.FullName</li>
+                }
+            </ul>
+        </div>
     </div>
-</div>
+}

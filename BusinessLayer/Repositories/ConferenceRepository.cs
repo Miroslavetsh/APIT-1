@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using BusinessLayer.DataServices;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
-using Microsoft.AspNetCore.Http;
 
 namespace BusinessLayer.Repositories
 {
@@ -85,6 +83,8 @@ namespace BusinessLayer.Repositories
 
         private ConferenceViewModel ConvertToViewModel(Conference conf)
         {
+            if (conf == null) return null;
+
             return new ConferenceViewModel
             {
                 Id = conf.Id,
@@ -106,6 +106,5 @@ namespace BusinessLayer.Repositories
 
         private IEnumerable<ConferenceViewModel> ConvertToViewModel
             (IEnumerable<Conference> conf) => conf.Select(ConvertToViewModel);
-        
     }
 }

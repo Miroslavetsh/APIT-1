@@ -1,8 +1,17 @@
-﻿<ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+﻿@{
+    var user = SignInManager.IsSignedIn(User)
+        ? await UserManager.GetUserAsync(User)
+        : null;
+}
+
+<ul class="navbar-nav">
+    @if (user != null)
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="account" asp-action="index" title="Manage">Hello @User.Identity.Name!</a>
+            <a class="nav-link text-dark" asp-controller="account" asp-action="index"
+               asp-route-x="@user.ProfileAddress" title="Manage">
+                Hello @User.Identity.Name!
+            </a>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-controller="account" asp-action="logout"

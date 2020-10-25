@@ -23,14 +23,13 @@ namespace Apit.Controllers
         }
 
 
-        [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View(new LoginViewModel {ReturnUrl = returnUrl});
         }
 
-        [AllowAnonymous, HttpPost]
+        [HttpPost]
         // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -45,6 +44,7 @@ namespace Apit.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

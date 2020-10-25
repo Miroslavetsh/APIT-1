@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Apit.Controllers
 {
-    [Authorize]
     public partial class AccountController : Controller
     {
+        [Authorize]
         public async Task<IActionResult> Index(string x)
         {
             var user = x == null
@@ -19,12 +19,13 @@ namespace Apit.Controllers
             return View(user);
         }
 
+        [Authorize]
         public IActionResult Edit()
         {
             return View();
         }
 
-        [HttpPost]
+        [Authorize, HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
             var isSuccess = true;

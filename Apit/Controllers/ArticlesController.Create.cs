@@ -97,7 +97,7 @@ namespace Apit.Controllers
             var dateNow = DateTime.Now;
             var user = await _userManager.GetUserAsync(User);
 
-            _dataManager.Articles.Create(new Article
+            var article = new Article
             {
                 Id = Guid.NewGuid(),
                 TopicId = topic.Id,
@@ -114,7 +114,10 @@ namespace Apit.Controllers
 
                 DateCreated = dateNow,
                 DateLastModified = dateNow
-            });
+            };
+            
+            _dataManager.Conferences.AddArticle(article);
+            _dataManager.Articles.Create(article);
 
             return Redirect("/articles/p/" + model.UniqueAddress);
         }

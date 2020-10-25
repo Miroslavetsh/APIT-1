@@ -9,14 +9,13 @@ namespace Apit.Controllers
 {
     public partial class AccountController
     {
-        [AllowAnonymous]
         public IActionResult Register(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View(new RegisterViewModel {ReturnUrl = returnUrl});
         }
 
-        [HttpPost, AllowAnonymous]
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -24,6 +23,7 @@ namespace Apit.Controllers
             var user = new User
             {
                 Id = Guid.NewGuid().ToString(),
+                ProfileAddress = _dataManager.Users.GenerateUniqueAddress(),
 
                 FirstName = model.FirstName,
                 LastName = model.LastName,

@@ -17,8 +17,12 @@ namespace BusinessLayer.DataServices
         {
             int iter = 0;
             string address;
-            do address = Guid.NewGuid().ToString("N").Substring(0, length);
-            while (data.GetByUniqueAddress(address) != null && iter++ < 500);
+            do
+            {
+                var guid = Guid.NewGuid().ToString("N");
+                address = guid.Substring(guid.Length - length);
+            } while (data.GetByUniqueAddress(address) != null && iter++ < 500);
+
             return iter >= 500 ? null : address;
         }
 

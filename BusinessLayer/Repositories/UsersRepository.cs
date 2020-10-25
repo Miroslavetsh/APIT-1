@@ -5,7 +5,6 @@ using BusinessLayer.DataServices;
 using BusinessLayer.Interfaces;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Repositories
 {
@@ -29,10 +28,9 @@ namespace BusinessLayer.Repositories
 
         public void Create(User entity)
         {
-            if (entity == null) throw new ArgumentNullException();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            //TODO: _ctx.Entry() => !possible! not works
-            _ctx.Entry(entity).State = entity.Id == default ? EntityState.Added : EntityState.Modified;
+            _ctx.Users.Add(entity);
             SaveChanges();
         }
 

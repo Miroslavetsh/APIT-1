@@ -11,16 +11,16 @@ namespace BusinessLayer.Repositories
 {
     public partial class ConferenceRepository
     {
-        private IEnumerable<User> GetConfParticipants(Conference conference) =>
+        public IEnumerable<User> GetConfParticipants(Conference conference) =>
             _ctx.ConfParticipants.Where(a => a.Conference == conference).Select(a => _users.GetById(a.Id));
 
-        private IEnumerable<User> GetConfAdmins(Conference conference) =>
+        public IEnumerable<User> GetConfAdmins(Conference conference) =>
             _ctx.ConfAdmins.Where(a => a.Conference == conference).Select(a => _users.GetById(a.Id));
 
-        private IEnumerable<ArticleViewModel> GetConfArticles(Conference conference) =>
+        public IEnumerable<ArticleViewModel> GetConfArticles(Conference conference) =>
             _ctx.Articles.Where(a => a.Conference == conference).Select(a => _articles.GetById(a.Id));
 
-        private IEnumerable<string> GetConfImages(Conference conference) =>
+        public IEnumerable<string> GetConfImages(Conference conference) =>
             _ctx.ConfImages.Where(a => a.Conference == conference).Select(a => a.ImagePath);
         
         

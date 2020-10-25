@@ -10,9 +10,13 @@ namespace Apit.Controllers
     [Authorize]
     public partial class AccountController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string x)
         {
-            return View();
+            var user = x == null
+                ? await _userManager.GetUserAsync(User)
+                : _dataManager.Users.GetByUniqueAddress(x);
+
+            return View(user);
         }
 
         public IActionResult Edit()
@@ -24,8 +28,8 @@ namespace Apit.Controllers
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
             var isSuccess = true;
-            var errorMessage = "error";
-            var successMessage = "success";
+            const string errorMessage = "не вдалось дані змінити";
+            const string successMessage = "дані успішно змінено";
 
             if (!ModelState.IsValid)
             {
@@ -77,7 +81,6 @@ namespace Apit.Controllers
                 }
                 else isSuccess = false;
             }
-
 
             //TODO: tro factor auth with phone number
 

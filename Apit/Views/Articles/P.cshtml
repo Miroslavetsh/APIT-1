@@ -9,9 +9,10 @@
 @if (isMine)
 {
     <div>
-        <a asp-controller="articles" asp-action="edit" asp-route-id="@article.Id">Edit</a>
+        <a asp-controller="articles" asp-action="edit" asp-route-id="@article.UniqueAddress">Edit</a>
         <form asp-controller="articles" asp-action="delete"
-              asp-route-id="@article.Id" asp-route-returnUrl="@Context.Request.Path">
+              asp-route-id="@article.UniqueAddress"
+              asp-route-returnUrl="@Context.Request.Path">
             <button type="submit">Delete</button>
         </form>
     </div>
@@ -23,7 +24,12 @@
     </h4>
     <h3>@article.Title</h3>
     <hr>
-    <p>@article.HTML</p>
+    <p>@article.HTMLContent</p>
     <hr>
+    <a asp-controller="resources" asp-action="get"
+       asp-route-id="@article.DocFileAddress"
+       asp-route-returnUrl="@Context.Request.Path">
+        Download as document
+    </a>
     <span>Created at: @article.DateCreated.ToString(CultureInfo.CurrentCulture)</span>
 </article>

@@ -3,29 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DatabaseLayer.Migrations
 {
-    public partial class Development_1A : Migration
+    public partial class Development_3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Articles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    TopicId = table.Column<Guid>(nullable: false),
-                    CreatorId = table.Column<string>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    Status = table.Column<short>(nullable: false),
-                    KeyWords = table.Column<string>(nullable: false),
-                    DataFile = table.Column<string>(nullable: false),
-                    DateCreated = table.Column<DateTime>(nullable: false),
-                    DateLastModified = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Articles", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -66,11 +47,31 @@ namespace DatabaseLayer.Migrations
                     ScienceDegree = table.Column<short>(nullable: false),
                     AcademicTitle = table.Column<short>(nullable: false),
                     ParticipationForm = table.Column<short>(nullable: false),
-                    ProfilePhotoPath = table.Column<string>(nullable: true)
+                    ProfileAddress = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Conferences",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UniqueAddress = table.Column<string>(nullable: true),
+                    IsActual = table.Column<bool>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    ShortDescription = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    DateLastModified = table.Column<DateTime>(nullable: false),
+                    DateStart = table.Column<DateTime>(nullable: false),
+                    DateFinish = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conferences", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,20 +192,98 @@ namespace DatabaseLayer.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Articles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UniqueAddress = table.Column<string>(nullable: false),
+                    TopicId = table.Column<Guid>(nullable: false),
+                    CreatorId = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Status = table.Column<short>(nullable: false),
+                    KeyWords = table.Column<string>(nullable: false),
+                    HtmlFilePath = table.Column<string>(nullable: false),
+                    DocxFilePath = table.Column<string>(nullable: false),
+                    ConferenceId = table.Column<Guid>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    DateLastModified = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Articles_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConfAdmins",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    ConferenceId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfAdmins", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConfAdmins_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConfImages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ImagePath = table.Column<string>(nullable: true),
+                    ConferenceId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConfImages_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConfParticipants",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    ConferenceId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfParticipants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConfParticipants_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "316655fc-f17e-4972-9d78-6fbe3b0a5a19", "5ddf2067-c1c5-4838-a235-f33ac34793c0", null, null });
+                values: new object[] { "9b7d6bbc-8465-4e67-8544-8e56cc0b5474", "1464c3fa-3696-42a1-bb92-f1407b9595e5", null, null });
 
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AcademicTitle", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "MiddleName", "NormalizedEmail", "NormalizedUserName", "ParticipationForm", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePhotoPath", "ScienceDegree", "SecurityStamp", "TwoFactorEnabled", "UserName", "WorkingFor" },
-                values: new object[] { "2d3c10cf-1b7a-4908-ab0c-0ad017f7f6c2", (short)1, 0, "0edae5a2-abca-457d-b29c-350731e39d4e", "test@test.com", true, "Big", "Boss", false, null, null, "TEST@TEST.COM", "ADMIN", (short)254, "AQAAAAEAACcQAAAAEFZNQiLfmS7Q5+j6kce5ZHk4EaiTiNut5De/i4yjnD4/krK1L2dL1tVLC31wZd2nyw==", null, false, null, (short)0, "7405c3f4-4b33-4690-9774-b98348e2d843", false, "admin", null });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "UserId", "RoleId" },
-                values: new object[] { "2d3c10cf-1b7a-4908-ab0c-0ad017f7f6c2", "316655fc-f17e-4972-9d78-6fbe3b0a5a19" });
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_ConferenceId",
+                table: "Articles",
+                column: "ConferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -244,6 +323,21 @@ namespace DatabaseLayer.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfAdmins_ConferenceId",
+                table: "ConfAdmins",
+                column: "ConferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfImages_ConferenceId",
+                table: "ConfImages",
+                column: "ConferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfParticipants_ConferenceId",
+                table: "ConfParticipants",
+                column: "ConferenceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -267,6 +361,15 @@ namespace DatabaseLayer.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ConfAdmins");
+
+            migrationBuilder.DropTable(
+                name: "ConfImages");
+
+            migrationBuilder.DropTable(
+                name: "ConfParticipants");
+
+            migrationBuilder.DropTable(
                 name: "Topics");
 
             migrationBuilder.DropTable(
@@ -274,6 +377,9 @@ namespace DatabaseLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Conferences");
         }
     }
 }

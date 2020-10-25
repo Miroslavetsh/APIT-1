@@ -8,16 +8,5 @@
 }
 else
 {
-    @foreach (var article in Model.Collection)
-    {
-        <article>
-            <h3>@article.Title</h3>
-            <p>
-                <span>Topic:</span>@article.Topic?.Name
-            </p>
-            <p>@article.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
-            <a asp-action="p" asp-controller="articles" asp-route-id="@article.UniqueAddress">Read mode</a>
-        </article>
-        <br/>
-    }
+    @Html.PartialAsync("Components/ArticlesList", Model.Collection)
 }

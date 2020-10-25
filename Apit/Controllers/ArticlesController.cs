@@ -1,6 +1,6 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Models;
@@ -15,18 +15,22 @@ namespace Apit.Controllers
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
 
+        private readonly Regex _keyWordsAvailableRegex;
+        private readonly Regex _keyWordsSeparatorRegex;
 
         public ArticlesController(UserManager<User> userManager, DataManager dataManager)
         {
             _userManager = userManager;
             _dataManager = dataManager;
+            
+            _keyWordsAvailableRegex = new Regex("^[a-zA-Z0-9 ,';]+$", RegexOptions.Compiled);
+            _keyWordsSeparatorRegex = new Regex("[;, ]", RegexOptions.Compiled);
         }
 
 
         public IActionResult P(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) Error();
-            Console.WriteLine("ID: " + id);
             var article = _dataManager.Articles.GetByUniqueAddress(id);
             return article == null ? Error() : View(article);
         }

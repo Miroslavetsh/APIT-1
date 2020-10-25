@@ -15,4 +15,12 @@ namespace DatabaseLayer.Entities
 
         public Conference Conference { get; set; }
     }
+
+    public class ConferenceImage
+    {
+        public Guid Id { get; set; }
+        public string ImagePath { get; set; }
+
+        public Conference Conference { get; set; }
+    }
 }

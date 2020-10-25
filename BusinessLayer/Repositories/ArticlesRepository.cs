@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BusinessLayer.DataServices;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Models;
@@ -12,10 +13,12 @@ namespace BusinessLayer.Repositories
     public class ArticlesRepository : IArticlesRepository
     {
         private readonly AppDbContext _ctx;
+        private readonly IConferencesRepository _conferences;
 
-        public ArticlesRepository(AppDbContext context)
+        public ArticlesRepository(AppDbContext context, IConferencesRepository conferences)
         {
             _ctx = context;
+            _conferences = conferences;
         }
 
         public string GenerateUniqueAddress() => DataUtil.GenerateUniqueAddress(this, 8);
@@ -23,12 +26,12 @@ namespace BusinessLayer.Repositories
         public IEnumerable<ArticleViewModel> GetAll() => ConvertToViewModel(_ctx.Articles);
 
         public ArticleViewModel GetById(Guid id) =>
-            ConvertToViewModel(_ctx.Articles.FirstOrDefault(a => a.Id == id));
+            ConvertToViewModel(_ctx.Articles.FirstOrDefault(a => a.Id == id)).Result;
 
         public bool IsExist(Guid id) => _ctx.Articles.Any(a => a.Id == id);
 
         public ArticleViewModel GetByUniqueAddress(string address) =>
-            ConvertToViewModel(_ctx.Articles.FirstOrDefault(a => a.UniqueAddress == address));
+            ConvertToViewModel(_ctx.Articles.FirstOrDefault(a => a.UniqueAddress == address)).Result;
 
         public IEnumerable<ArticleViewModel> GetByCodeWord(string word)
         {
@@ -48,27 +51,18 @@ namespace BusinessLayer.Repositories
         public IEnumerable<ArticleViewModel> GetByCreator(string userId) =>
             ConvertToViewModel(_ctx.Articles.Where(a => a.CreatorId == userId));
 
-        public IEnumerable<Article> GetBtConference(Conference conf) => 
+        public IEnumerable<Article> GetByConference(Conference conf) =>
             _ctx.Articles.Where(a => a.Conference == conf);
 
         public void SaveChanges() => _ctx.SaveChanges();
 
-        public void Create(ArticleViewModel entity)
+
+        public void Create(Article entity)
         {
             if (entity == null) throw new ArgumentNullException();
 
-            var instance = _ctx.Articles.FirstOrDefault(a => a.Id == entity.Id);
-
-            if (instance != null)
-            {
-                ConvertViewModelToDbObject(entity, instance);
-            }
-            else
-            {
-                var newInstance = new Article();
-                ConvertViewModelToDbObject(entity, newInstance);
-                _ctx.Articles.Add(newInstance);
-            }
+            _ctx.Articles.Add(entity);
+            _conferences.AddArticle(entity);
 
             SaveChanges();
         }
@@ -80,44 +74,27 @@ namespace BusinessLayer.Repositories
         }
 
 
-        private ArticleViewModel ConvertToViewModel(Article article)
+        private async Task<ArticleViewModel> ConvertToViewModel(Article article)
         {
             if (article == null) return null;
 
             return new ArticleViewModel
             {
-                Id = article.Id,
                 UniqueAddress = article.UniqueAddress,
                 Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.TopicId),
                 Creator = _ctx.Users.FirstOrDefault(u => u.Id == article.CreatorId),
 
                 Title = article.Title,
                 Status = article.Status,
-                KeyWords = article.KeyWords.Split(' '),
-                HTML = DataUtil.LoadArticle(article.DataFile),
+                KeyWords = article.KeyWords.Split(';'),
+                HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath),
 
                 DateCreated = article.DateCreated,
                 DateLastModified = article.DateLastModified
             };
         }
 
-        private IEnumerable<ArticleViewModel> ConvertToViewModel
-            (IEnumerable<Article> articles) => articles.Select(ConvertToViewModel);
-
-        private static void ConvertViewModelToDbObject(ArticleViewModel model, Article instance)
-        {
-            instance.Id = model.Id;
-            instance.TopicId = model.Topic.Id;
-            instance.CreatorId = model.Creator.Id;
-
-            instance.Title = model.Title;
-            instance.Status = model.Status;
-            instance.KeyWords = string.Join(' ', model.KeyWords);
-            //TODO: Loading article content from the file system :>
-            instance.DataFile = model.HTML;
-
-            instance.DateCreated = model.DateCreated;
-            instance.DateLastModified = model.DateLastModified;
-        }
+        private IEnumerable<ArticleViewModel> ConvertToViewModel(IEnumerable<Article> articles) =>
+            articles.Select(article => ConvertToViewModel(article).Result);
     }
 }

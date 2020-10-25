@@ -8,7 +8,7 @@ namespace BusinessLayer.Models
     public class ConferenceViewModel
     {
         public Guid Id { get; set; }
-        
+
         public string UniqueAddress { get; set; }
 
         public string Title { get; set; }
@@ -19,10 +19,11 @@ namespace BusinessLayer.Models
         public IEnumerable<User> Participants { get; set; }
         public IEnumerable<User> Admins { get; set; }
         public IEnumerable<ArticleViewModel> Articles { get; set; }
+        public IEnumerable<string> Images { get; set; }
 
         [DataType(DataType.Date)] public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)] public DateTime DateLastModified { get; set; }
         [DataType(DataType.DateTime)] public DateTime DateStart { get; set; }
-        [DataType(DataType.Duration)] public DateTime Duration { get; set; }
+        [DataType(DataType.DateTime)] public DateTime DateFinish { get; set; }
     }
 }

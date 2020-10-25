@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DatabaseLayer.Enums;
 
@@ -7,11 +6,10 @@ namespace DatabaseLayer.Entities
 {
     public class Article
     {
-        //TODO: Convert Id from Guid to String format
         [Required] public Guid Id { get; set; }
-        public string UniqueAddress { get; set; }
-        [Required] public Guid TopicId { get; set; }
-        [Required] public string CreatorId { get; set; }
+        [Required] public string UniqueAddress { get; set; }
+        public Guid TopicId { get; set; }
+        public string CreatorId { get; set; }
 
         public string Title { get; set; }
         [Required] public ArticleStatus Status { get; set; }
@@ -25,12 +23,8 @@ namespace DatabaseLayer.Entities
         [Required]
         public string KeyWords { get; set; }
 
-        /// <summary>
-        /// MS Word file with article content
-        /// (use relative path)
-        /// </summary>
-        public string DataFile { get; set; }
-
+        [Required] public string HtmlFilePath { get; set; }
+        [Required] public string DocxFilePath { get; set; }
 
         public Conference Conference { get; set; }
 

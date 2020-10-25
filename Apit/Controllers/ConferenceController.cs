@@ -1,17 +1,21 @@
 ﻿using System.Diagnostics;
 using BusinessLayer;
 using BusinessLayer.Models;
+using DatabaseLayer.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Apit.Controllers
 {
-    public class ConferenceController : Controller
+    public partial class ConferenceController : Controller
     {
         private readonly DataManager _dataManager;
+        private readonly UserManager<User> _userManager;
 
-        public ConferenceController(DataManager dataManager)
+        public ConferenceController(DataManager dataManager, UserManager<User> userManager)
         {
             _dataManager = dataManager;
+            _userManager = userManager;
         }
 
         public IActionResult Index(string id)

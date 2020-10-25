@@ -1,12 +1,13 @@
-﻿@{
+﻿@model User
+
+@{
     Layout = "_Layout";
-    var user = await UserManager.GetUserAsync(User);
 }
 
 <h1>Management page</h1>
 
 <div class="user-info">
-    <h2>@user.LastName @user.FirstName @user.MiddleName</h2>
+    <h2>@Model.LastName @Model.FirstName @Model.MiddleName</h2>
     <a asp-area="" asp-controller="account" asp-action="edit">Edit profile</a>
 </div>
 

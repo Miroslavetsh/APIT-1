@@ -29,10 +29,6 @@ namespace DatabaseLayer.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DataFile")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreated")
@@ -40,6 +36,14 @@ namespace DatabaseLayer.Migrations
 
                     b.Property<DateTime>("DateLastModified")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DocxFilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HtmlFilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KeyWords")
                         .IsRequired()
@@ -55,6 +59,7 @@ namespace DatabaseLayer.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UniqueAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -73,6 +78,9 @@ namespace DatabaseLayer.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateFinish")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateLastModified")
                         .HasColumnType("datetime2");
 
@@ -82,8 +90,8 @@ namespace DatabaseLayer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Duration")
-                        .HasColumnType("datetime2");
+                    b.Property<bool>("IsActual")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ShortDescription")
                         .HasColumnType("nvarchar(max)");
@@ -112,6 +120,25 @@ namespace DatabaseLayer.Migrations
                     b.HasIndex("ConferenceId");
 
                     b.ToTable("ConfAdmins");
+                });
+
+            modelBuilder.Entity("DatabaseLayer.Entities.ConferenceImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ConferenceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConferenceId");
+
+                    b.ToTable("ConfImages");
                 });
 
             modelBuilder.Entity("DatabaseLayer.Entities.ConferenceParticipant", b =>
@@ -206,9 +233,6 @@ namespace DatabaseLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfilePhotoPath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<short>("ScienceDegree")
                         .HasColumnType("smallint");
 
@@ -267,8 +291,8 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "769b263b-1048-4195-9937-9faf3a22e4f5",
-                            ConcurrencyStamp = "76ebedea-14cb-4737-ae26-3c60a3acf5e7"
+                            Id = "9b7d6bbc-8465-4e67-8544-8e56cc0b5474",
+                            ConcurrencyStamp = "1464c3fa-3696-42a1-bb92-f1407b9595e5"
                         });
                 });
 
@@ -387,6 +411,13 @@ namespace DatabaseLayer.Migrations
                 {
                     b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
                         .WithMany("Admins")
+                        .HasForeignKey("ConferenceId");
+                });
+
+            modelBuilder.Entity("DatabaseLayer.Entities.ConferenceImage", b =>
+                {
+                    b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
+                        .WithMany("Images")
                         .HasForeignKey("ConferenceId");
                 });
 

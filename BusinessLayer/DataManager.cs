@@ -10,11 +10,13 @@ namespace BusinessLayer
         public IConferencesRepository Conferences { get; }
 
 
-        public DataManager(IUsersRepository users, IArticlesRepository articles, ITopicsRepository topics)
+        public DataManager(IUsersRepository users, IArticlesRepository articles,
+            ITopicsRepository topics, IConferencesRepository conferences)
         {
             Users = users;
             Articles = articles;
             Topics = topics;
+            Conferences = conferences;
         }
     }
 }

@@ -2,8 +2,9 @@
 {
     public enum ArticleStatus : short
     {
-        Published = 0,
-        Edited,
-        Banned = 254
+        Uploaded = 0,
+        Published = 1,
+        Edited = 2,
+        Banned = 3
     }
 }

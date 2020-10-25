@@ -17,7 +17,6 @@ namespace DatabaseLayer.Entities
         public ParticipationForm ParticipationForm { get; set; }
 
         [Required] public string ProfileAddress { get; set; }
-        public string ProfilePhotoPath { get; set; }
 
         [NotMapped] public string FullName => $"{LastName} {FirstName} {MiddleName}";
         public static bool operator ==(User a, User b) => a?.Id == b?.Id;

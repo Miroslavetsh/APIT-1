@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BusinessLayer.DataServices;
 using BusinessLayer.Interfaces;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
@@ -40,5 +41,11 @@ namespace BusinessLayer.Repositories
             _ctx.Users.Remove(new User {Id = id});
             SaveChanges();
         }
+
+        public string GenerateUniqueAddress() => DataUtil.GenerateUniqueAddress(this, 8);
+
+        public User GetByUniqueAddress(string address) => _ctx.Users.FirstOrDefault(a => a.ProfileAddress == address);
+
+        public IEnumerable<User> GetLatest(ushort count) => throw new NotImplementedException();
     }
 }

@@ -10,6 +10,8 @@ namespace DatabaseLayer.Entities
 
         public string UniqueAddress { get; set; }
 
+        public bool IsActual { get; set; }
+
         public string Title { get; set; }
 
         public string ShortDescription { get; set; }
@@ -18,12 +20,13 @@ namespace DatabaseLayer.Entities
         public ICollection<ConferenceParticipant> Participants { get; set; }
         public ICollection<ConferenceAdmin> Admins { get; set; }
         public ICollection<Article> Articles { get; set; }
+        public ICollection<ConferenceImage> Images { get; set; }
 
 
         [DataType(DataType.Date)] public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)] public DateTime DateLastModified { get; set; }
         [DataType(DataType.DateTime)] public DateTime DateStart { get; set; }
-        [DataType(DataType.Duration)] public DateTime Duration { get; set; }
+        [DataType(DataType.DateTime)] public DateTime DateFinish { get; set; }
 
 
         public Conference()
@@ -31,6 +34,7 @@ namespace DatabaseLayer.Entities
             Participants = new List<ConferenceParticipant>();
             Admins = new List<ConferenceAdmin>();
             Articles = new List<Article>();
+            Images = new List<ConferenceImage>();
         }
 
 

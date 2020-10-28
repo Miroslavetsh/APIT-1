@@ -14,7 +14,7 @@ namespace BusinessLayer.Models
         public string HTMLContent { get; set; }
 
         public Topic Topic { get; set; }
-        public User Creator { get; set; }
+        public User Creator { get; set; } // If article has many authors?
 
 
         public string Title { get; set; }

@@ -45,13 +45,13 @@ namespace Apit
             services.AddDefaultIdentity<User>(options =>
             {
                 options.User.RequireUniqueEmail = true;
-                options.Password.RequiredLength = 4;
+                options.Password.RequiredLength = 4; // Need to increase a password length up to 8
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireDigit = true;
                 options.SignIn.RequireConfirmedAccount = false;
-            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders(); // Need to add the Roles service to allow working with roles (e.g. AddRoles<IdentityRole>())
 
             services.ConfigureApplicationCookie(options =>
             {

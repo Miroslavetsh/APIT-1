@@ -12,7 +12,7 @@ namespace Apit.Controllers
 {
     public partial class ArticlesController
     {
-        [Authorize]
+        [Authorize] //Apply the [Authorize] attribute to the whole class instead of the each method.
         public IActionResult Create()
         {
             return View(new NewArticleViewModel
@@ -27,6 +27,7 @@ namespace Apit.Controllers
             // Combine all errors and return them back if this variable is set to true
             bool hasIncorrectData = false;
 
+            // These checks better to perform using the appropriate ViewModel class and the appropriate attributes (e.g. Required, Remote)
             #region ================ Long form review code ================
 
             // Check unique address field value
@@ -41,7 +42,7 @@ namespace Apit.Controllers
             else if (model.UniqueAddress.Length > 25)
             {
                 ModelState.AddModelError(nameof(NewArticleViewModel.UniqueAddress),
-                    "адреса задовга (потрібна довжина 5-20 символів)");
+                    "адреса задовга (потрібна довжина 5-20 символів)"); // Either the length should be up to 20 symbols or up to 25. Not 20 and 25 symbols simultaneously.
                 hasIncorrectData = true;
             }
             else if (_dataManager.Articles.GetByUniqueAddress(model.UniqueAddress) != null)
@@ -85,7 +86,7 @@ namespace Apit.Controllers
             else
             {
                 ModelState.AddModelError(nameof(model.DocFile),
-                    "будь ласка, прикрепіть файл з матеріалом");
+                    "будь ласка, прикріпіть файл з матеріалом"); // typo
                 hasIncorrectData = true;
             }
 

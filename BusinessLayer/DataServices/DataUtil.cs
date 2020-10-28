@@ -9,8 +9,8 @@ namespace BusinessLayer.DataServices
 {
     public static class DataUtil
     {
-        public const string DOCS_DIR = "../Local/Articles/Docs/";
-        public const string HTML_DIR = "../Local/Articles/Html/";
+        public const string DOCS_DIR = "../Local/Articles/Docs/";// Is it necessary to use the public modifier? 
+        public const string HTML_DIR = "../Local/Articles/Html/";// Is it necessary to use the public modifier? 
         public const string IMAGES_DIR = "../Local/Articles/Gallery/";
 
         public static string GenerateUniqueAddress<TKey>(IAddressedData<TKey> data, int length)

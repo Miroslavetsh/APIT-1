@@ -22,7 +22,7 @@ namespace Apit.Controllers
 
             var dateNow = new DateTime();
 
-            var conference = new Conference
+            var conference = new Conference // I propose to use constructor instead of the class instance initialization to avoid the code duplication
             {
                 Id = Guid.NewGuid(),
                 UniqueAddress = model.UniqueAddress,
@@ -39,7 +39,7 @@ namespace Apit.Controllers
             };
 
             var user = await _userManager.GetUserAsync(User);
-            _dataManager.Conferences.AddAdmin(user);
+            _dataManager.Conferences.AddAdmin(user); // Why Admin? How you distinguish user with admin role and the rest users?
             _dataManager.Conferences.Create(conference);
 
             return View(model);

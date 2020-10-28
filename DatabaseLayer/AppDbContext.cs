@@ -27,7 +27,7 @@ namespace DatabaseLayer
 
         public DbSet<ConferenceImage> ConfImages { get; set; }
 
-
+        // It needs to add the relations for the DataModels and the primary/foreign keys using EF Fluent API
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -38,7 +38,14 @@ namespace DatabaseLayer
                 Id = roleId,
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
-            });
+            }); // It is better to describe the admin user in the startup file, e.g. 
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(RoleNames.ADMIN, policy =>
+            //    {
+            //        policy.RequireUserName("admin@gmail.com");
+            //    });
+            //});
 
             /*
             var userId = Guid.NewGuid().ToString();
@@ -70,6 +77,7 @@ namespace DatabaseLayer
             */
         }
 
+        // Why do we need this method?
         public static void ClearDatabase(DbContext context)
         {
             var objectContext = ((IObjectContextAdapter) context).ObjectContext;

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Apit.Controllers
 {
-    public partial class AccountController
+    public partial class AccountController // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;

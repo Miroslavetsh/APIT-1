@@ -44,7 +44,7 @@ namespace BusinessLayer.DataServices
                 // ignored
             }
 
-            foreach (var process in Process.GetProcessesByName("WINWORD")) process.Kill();
+            foreach (var process in Process.GetProcessesByName("WINWORD")) process.Kill(); // It will possible to kill the WinWord processes which are not related to the our Information system
 
             Marshal.ReleaseComObject(docApp);
             GC.Collect();

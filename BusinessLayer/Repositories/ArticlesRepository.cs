@@ -46,6 +46,7 @@ namespace BusinessLayer.Repositories
         public IEnumerable<ArticleViewModel> GetLatest(ushort count) =>
             ConvertToViewModel(_ctx.Articles.OrderByDescending(a => a.DateCreated).Take(count));
 
+        // What happens in the case when one article has many authors and vice versa?
         public IEnumerable<ArticleViewModel> GetByCreator(string userId) =>
             ConvertToViewModel(_ctx.Articles.Where(a => a.CreatorId == userId));
 
@@ -70,7 +71,7 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
-
+        // It will be more convenient to do this using specific constructor
         private async Task<ArticleViewModel> ConvertToViewModel(Article article)
         {
             if (article == null) return null;

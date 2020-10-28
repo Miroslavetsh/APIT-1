@@ -17,7 +17,12 @@ namespace BusinessLayer.Models
         public string Description { get; set; }
 
         public IEnumerable<User> Participants { get; set; }
-        public IEnumerable<User> Admins { get; set; }
+
+
+        // The admin user must have access to the whole conferences data independently of the active instance of the conference.
+        public IEnumerable<User> Admins { get; set; } // It is better to use the Role property for each user and to restrict access to controllers/actions using specific attribute (e.g. [Authorize(Roles = RoleNames.ADMIN)])
+
+
         public IEnumerable<ArticleViewModel> Articles { get; set; }
         public IEnumerable<string> Images { get; set; }
 

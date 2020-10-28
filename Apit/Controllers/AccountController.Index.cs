@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Apit.Controllers
 {
-    public partial class AccountController : Controller
+    public partial class AccountController : Controller // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
     {
         [Authorize]
         public async Task<IActionResult> Index(string x)

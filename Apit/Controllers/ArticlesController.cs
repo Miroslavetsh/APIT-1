@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Apit.Controllers
 {
-    public partial class ArticlesController : Controller
+    public partial class ArticlesController : Controller //The access to these actions should be allowed only for authorized users.
     {
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
@@ -28,14 +28,14 @@ namespace Apit.Controllers
         }
 
 
-        public IActionResult P(string id)
+        public IActionResult P(string id) // Here need to change the action identifier to more informative.
         {
             if (string.IsNullOrWhiteSpace(id)) Error();
             var article = _dataManager.Articles.GetByUniqueAddress(id);
             return article == null ? Error() : View(article);
         }
 
-        public async Task<IActionResult> List(ArticlesListViewModel model)
+        public async Task<IActionResult> List(ArticlesListViewModel model) // What is the aim of using this parameter?
         {
             ViewData["Title"] = "Articles page title";
 
@@ -50,7 +50,7 @@ namespace Apit.Controllers
                 }
                 default:
                 {
-                    model.Filter = "all";
+                    model.Filter = "all"; // The all articles should be accessible only for admin.
                     model.Collection = _dataManager.Articles.GetAll()
                         .OrderBy(a => a.DateLastModified).Reverse();
                     break;

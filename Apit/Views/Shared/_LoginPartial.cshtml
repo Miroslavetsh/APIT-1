@@ -1,6 +1,6 @@
 ﻿@{
-    var user = SignInManager.IsSignedIn(User)
-        ? await UserManager.GetUserAsync(User)
+    var user = signInManager.IsSignedIn(User)
+        ? await userManager.GetUserAsync(User)
         : null;
 }
 

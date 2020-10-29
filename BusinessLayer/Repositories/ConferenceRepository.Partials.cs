@@ -22,68 +22,60 @@ namespace BusinessLayer.Repositories
 
         public IEnumerable<string> GetConfImages(Conference conference) =>
             _ctx.ConfImages.Where(a => a.Conference == conference).Select(a => a.ImagePath);
-        
-        
-        public void AddParticipant(User user)
-        {
-            var current = GetCurrentAsDbModel();
 
-            if (current.Participants.Any(a => a.Id == user.Id))
+
+        public void AddParticipant(Conference conference, User user)
+        {
+            if (conference.Participants.Any(a => a.Id == user.Id))
             {
-                Console.WriteLine($"Conference {current.Id} already contains participant {user.Id}");
+                Console.WriteLine($"Conference {conference.Id} already contains participant {user.Id}");
                 return;
             }
 
-            current.Participants.Add(new ConferenceParticipant
+            conference.Participants.Add(new ConferenceParticipant
             {
                 Id = user.Id,
-                Conference = current
+                Conference = conference
             });
         }
 
-        public void AddAdmin(User user)
+        public void AddAdmin(Conference conference, User user)
         {
-            var current = GetCurrentAsDbModel();
-
-            if (current.Admins.Any(a => a.Id == user.Id))
+            if (conference.Admins.Any(a => a.Id == user.Id))
             {
-                Console.WriteLine($"Conference {current.Id} already contains admin {user.Id}");
+                Console.WriteLine($"Conference {conference.Id} already contains admin {user.Id}");
                 return;
             }
 
-            current.Admins.Add(new ConferenceAdmin
+            conference.Admins.Add(new ConferenceAdmin
             {
                 Id = user.Id,
-                Conference = current
+                Conference = conference
             });
         }
 
-        public void AddArticle(Article article)
+        public void AddArticle(Conference conference, Article article)
         {
-            var current = GetCurrentAsDbModel();
-
-            if (current.Articles.Contains(article))
+            if (conference.Articles.Contains(article))
             {
-                Console.WriteLine($"Conference {current.Id} already contains article {article.Id}");
+                Console.WriteLine($"Conference {conference.Id} already contains article {article.Id}");
                 return;
             }
 
-            current.Articles.Add(article);
+            conference.Articles.Add(article);
         }
 
-        public void AddImage(IFormFile image)
+        public void AddImage(Conference conference, IFormFile image)
         {
-            var current = GetCurrentAsDbModel();
-
             var extension = "." + DataUtil.GetExtension(image.FileName);
             var filePath = Path.Combine(DataUtil.IMAGES_DIR, Guid.NewGuid() + extension);
             DataUtil.SaveFile(image, filePath);
 
-            current.Images.Add(new ConferenceImage
+            conference.Images.Add(new ConferenceImage
             {
                 Id = Guid.NewGuid(),
                 ImagePath = filePath,
-                Conference = current,
+                Conference = conference,
             });
         }
     }

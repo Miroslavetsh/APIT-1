@@ -3,7 +3,7 @@
 @{
     Layout = "_Layout";
     var article = Model;
-    var isMine = UserManager.GetUserId(User) == article.Creator.Id;
+    var isMine = userManager.GetUserId(User) == article.Creator.Id;
 }
 
 @if (isMine)

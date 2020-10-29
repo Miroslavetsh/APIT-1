@@ -53,7 +53,7 @@ namespace Apit.Controllers
 
 
             // Check selected topic existing
-            var topic = _dataManager.Topics.GetById(Guid.Parse(model.TopicId));
+            var topic = model.TopicId == null ? null : _dataManager.Topics.GetById(Guid.Parse(model.TopicId));
             if (topic == null)
             {
                 ModelState.AddModelError(nameof(model.TopicId),
@@ -115,11 +115,12 @@ namespace Apit.Controllers
                 DateCreated = dateNow,
                 DateLastModified = dateNow
             };
-            
-            _dataManager.Conferences.AddArticle(article);
+
+            var currentConf = _dataManager.Conferences.GetCurrentAsDbModel();
+            _dataManager.Conferences.AddArticle(currentConf, article);
             _dataManager.Articles.Create(article);
 
-            return Redirect("/articles/p/" + model.UniqueAddress);
+            return LocalRedirect("/articles/p/" + model.UniqueAddress);
         }
     }
 }

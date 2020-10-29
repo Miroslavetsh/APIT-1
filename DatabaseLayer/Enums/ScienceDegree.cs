@@ -1,10 +1,14 @@
-﻿namespace DatabaseLayer.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DatabaseLayer.Enums
 {
     public enum ScienceDegree : short
     {
-        First = 0,
-        Second,
-        Third,
-        OtherOption = 254
+        [Display(Name = "Бакалавр")] Bachelor,
+        [Display(Name = "Магістр")] Master,
+        [Display(Name = "Аспірант")] Graduate,
+        [Display(Name = "Кандидат наук")] Candidate,
+        [Display(Name = "Доктор наук")] Doctor,
+        [Display(Name = "Інше")] Other
     }
 }

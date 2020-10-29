@@ -20,27 +20,8 @@ namespace Apit.Controllers
         {
             // TODO: new conference validation
 
-            var dateNow = new DateTime();
 
-            var conference = new Conference
-            {
-                Id = Guid.NewGuid(),
-                UniqueAddress = model.UniqueAddress,
-                IsActual = true,
-                Title = model.Title,
-
-                ShortDescription = model.ShortDescription,
-                Description = model.Description,
-
-                DateCreated = dateNow,
-                DateLastModified = dateNow,
-                DateStart = dateNow,
-                DateFinish = dateNow
-            };
-
-            var user = await _userManager.GetUserAsync(User);
-            _dataManager.Conferences.AddAdmin(user);
-            _dataManager.Conferences.Create(conference);
+            _dataManager.Conferences.Create(model);
 
             return View(model);
         }

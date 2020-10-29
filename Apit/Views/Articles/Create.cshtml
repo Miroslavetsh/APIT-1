@@ -1,18 +1,17 @@
 ﻿@model NewArticleViewModel
-@inject DataManager DataManager
 
 @{
     Layout = "_Layout";
-    var allTopics = DataManager.Topics.GetAll().ToArray();
+    var allTopics = dataManager.Topics.GetAll().ToArray();
 }
 
 <form enctype="multipart/form-data" asp-controller="articles" asp-action="create"
-      method="post" asp-route-returnUrl="/">
+      method="post" asp-route-returnUrl="@Url.Action("list", "articles")">
     <div asp-validation-summary="All">
         <div>
             <label asp-for="UniqueAddress"></label>
             <input asp-for="UniqueAddress" type="text" placeholder="@Model.UniqueAddress">
-            <span asp-validation-for="UniqueAddress"></span>
+            <span>/articles/p/</span><span asp-validation-for="UniqueAddress"></span>
         </div>
 
         <div>
@@ -44,7 +43,7 @@
         </div>
         <div>
             <label asp-for="DocFile"></label>
-            <input asp-for="DocFile" type="file" accept="application/msword">
+            <input asp-for="DocFile" type="file" accept=".docx, .doc">
             <span asp-validation-for="DocFile"></span>
         </div>
         <div>

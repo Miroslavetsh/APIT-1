@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -8,15 +9,23 @@ namespace DatabaseLayer.Entities
     public class User : IdentityUser
     {
         [Required] public string FirstName { get; set; }
-        [Required] public string LastName { get; set; }
-        public string MiddleName { get; set; }
 
-        public string WorkingFor { get; set; }
-        public ScienceDegree ScienceDegree { get; set; }
-        public AcademicTitle AcademicTitle { get; set; }
+        [Required] public string LastName { get; set; }
+
+        [Required] public string MiddleName { get; set; }
+
+
+        [Required] public string WorkingFor { get; set; }
+        public string ScienceDegree { get; set; }
+        public string AcademicTitle { get; set; }
         public ParticipationForm ParticipationForm { get; set; }
 
+
+        public string ProfilePhoto { get; set; }
         [Required] public string ProfileAddress { get; set; }
+
+        public ICollection<Article> OwnArticles { get; set; }
+
 
         [NotMapped] public string FullName => $"{LastName} {FirstName} {MiddleName}";
         public static bool operator ==(User a, User b) => a?.Id == b?.Id;

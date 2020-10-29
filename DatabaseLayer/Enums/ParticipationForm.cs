@@ -1,8 +1,11 @@
-﻿namespace DatabaseLayer.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DatabaseLayer.Enums
 {
     public enum ParticipationForm : short
     {
-        Visitor = 0,
-        Admin = 254
+        [Display(Name = "Глядач")] Listener = 0,
+        [Display(Name = "Подання тез")] ThesesPreparer = 1,
+        [Display(Name = "Доповідач")] Speaker = 2,
     }
 }

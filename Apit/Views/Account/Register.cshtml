@@ -33,11 +33,13 @@
             <div>
                 <label asp-for="ScienceDegree"></label>
                 <select asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()"></select>
+                <input asp-for="AltScienceDegree" type="text">
                 <span asp-validation-for="ScienceDegree"></span>
             </div>
             <div>
                 <label asp-for="AcademicTitle"></label>
                 <select asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()"></select>
+                <input asp-for="AltAcademicTitle" type="text">
                 <span asp-validation-for="AcademicTitle"></span>
             </div>
             <div>

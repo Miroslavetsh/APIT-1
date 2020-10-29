@@ -14,7 +14,6 @@
 
     <ItemGroup>
       <Folder Include="Local\ProfilePhotos" />
-      <Folder Include="Migrations" />
     </ItemGroup>
 
 </Project>

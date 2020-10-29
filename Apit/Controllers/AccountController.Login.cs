@@ -1,52 +1,43 @@
 ﻿using System.Threading.Tasks;
-using BusinessLayer;
 using BusinessLayer.Models;
-using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
     public partial class AccountController
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly DataManager _dataManager;
-
-        public AccountController(SignInManager<User> signInManager,
-            UserManager<User> userManager, DataManager dataManager)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _dataManager = dataManager;
-        }
-
-
         public IActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View(new LoginViewModel {ReturnUrl = returnUrl});
         }
 
-        [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken, HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
             var result = await _signInManager.PasswordSignInAsync
                 (model.Email, model.Password, model.RememberMe, false);
 
-            if (result.Succeeded) return Redirect(model.ReturnUrl ?? "/");
+            if (result.Succeeded)
+            {
+                _logger.LogDebug($"User {user.ProfileAddress} has successfully logged in");
+                return LocalRedirect(model.ReturnUrl ?? "/");
+            }
 
-            ModelState.AddModelError(nameof(LoginViewModel.Email), "User don't registered");
+            ModelState.AddModelError(string.Empty, "невірно введено дані");
             return View(model);
         }
 
         [Authorize]
         public async Task<IActionResult> Logout()
         {
+            _logger.LogDebug("User logged out");
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

@@ -47,22 +47,40 @@ namespace BusinessLayer.Repositories
             ConvertToViewModel(_ctx.Conferences.OrderByDescending(a => a.DateCreated).Take(count));
 
 
-        public void Create(Conference entity)
+        public void Create(NewConferenceViewModel entity)
         {
-            if (entity == null) throw new ArgumentNullException();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             var current = _ctx.Conferences.FirstOrDefault(a => a.IsActual);
             if (current != null) current.IsActual = false;
             else current = null;
 
-            _ctx.Conferences.Add(entity);
+            var dateNow = new DateTime();
+
+            var newConference = new Conference(entity.Admins, entity.Topics)
+            {
+                Id = Guid.NewGuid(),
+                UniqueAddress = entity.UniqueAddress,
+                IsActual = true,
+                Title = entity.Title,
+
+                ShortDescription = entity.ShortDescription,
+                Description = entity.Description,
+
+                DateCreated = dateNow,
+                DateLastModified = dateNow,
+                DateStart = entity.DateStart,
+                DateFinish = entity.DateFinish
+            };
+
+            _ctx.Conferences.Add(newConference);
 
             foreach (var admin in entity.Admins)
             {
                 _ctx.ConfAdmins.Add(new ConferenceAdmin
                 {
                     Id = admin.Id,
-                    Conference = entity
+                    Conference = newConference
                 });
             }
 
@@ -71,6 +89,7 @@ namespace BusinessLayer.Repositories
 
         public void Update(ConferenceViewModel model)
         {
+            // TODO ...
             throw new NotImplementedException();
         }
 
@@ -87,6 +106,8 @@ namespace BusinessLayer.Repositories
 
             return new ConferenceViewModel
             {
+                IsActual = conf.IsActual,
+
                 Id = conf.Id,
                 Title = conf.Title,
                 ShortDescription = conf.ShortDescription,

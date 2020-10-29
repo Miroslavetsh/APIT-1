@@ -32,12 +32,10 @@ namespace DatabaseLayer
         {
             base.OnModelCreating(builder);
 
-            var roleId = Guid.NewGuid().ToString();
-            builder.Entity<IdentityRole>().HasData(new User
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
-                Id = roleId,
-                UserName = "admin",
-                NormalizedUserName = "ADMIN",
+                Name = "admin",
+                NormalizedName = "ADMIN"
             });
 
             /*

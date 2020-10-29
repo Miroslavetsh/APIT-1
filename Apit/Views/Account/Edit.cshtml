@@ -4,7 +4,7 @@
 
 @{
     Layout = "_Layout";
-    var user = await UserManager.GetUserAsync(User);
+    var user = await userManager.GetUserAsync(User);
     var resultMessage = Model?.ResultMessage ?? "";
 
     IHtmlContent AddOptionsFrom<TEnum>(TEnum selected) where TEnum : Enum
@@ -34,7 +34,7 @@
             </div>
             <div>
                 <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" type="text" accept=".png, .jpg, .jpeg, .webp, .bmp" placeholder="@user.FirstName"/>
+                <input asp-for="FirstName" type="text" accept=".png, .jpg, .jpeg, .webp" placeholder="@user.FirstName"/>
                 <span asp-validation-for="FirstName"></span>
             </div>
             <div>
@@ -55,16 +55,16 @@
             </div>
             <div>
                 <label asp-for="ScienceDegree"></label>
-                <select asp-for="ScienceDegree">
-                    @(AddOptionsFrom<ScienceDegree>(@user.ScienceDegree))
-                </select>
+                <input type="text" value="@user.ScienceDegree" disabled>
+                <input asp-for="AltScienceDegree" type="text">
+                <select asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()"></select>
                 <span asp-validation-for="ScienceDegree"></span>
             </div>
             <div>
                 <label asp-for="AcademicTitle"></label>
-                <select asp-for="AcademicTitle">
-                    @(AddOptionsFrom<AcademicTitle>(@user.AcademicTitle))
-                </select>
+                <input type="text" value="@user.AcademicTitle" disabled>
+                <input asp-for="AltAcademicTitle" type="text">
+                <select asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()"></select>
                 <span asp-validation-for="AcademicTitle"></span>
             </div>
             <div>
@@ -73,12 +73,6 @@
                     @(AddOptionsFrom<ParticipationForm>(@user.ParticipationForm))
                 </select>
                 <span asp-validation-for="ParticipationForm"></span>
-            </div>
-
-            <div>
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" type="text" placeholder="@user.PhoneNumber"/>
-                <span asp-validation-for="PhoneNumber"></span>
             </div>
 
             <div>

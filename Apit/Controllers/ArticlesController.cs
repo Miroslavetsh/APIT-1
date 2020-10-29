@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Models;
 using BusinessLayer;
@@ -22,7 +21,7 @@ namespace Apit.Controllers
         {
             _userManager = userManager;
             _dataManager = dataManager;
-            
+
             _keyWordsAvailableRegex = new Regex("^[a-zA-Z0-9 ,';]+$", RegexOptions.Compiled);
             _keyWordsSeparatorRegex = new Regex("[;, ]", RegexOptions.Compiled);
         }
@@ -35,34 +34,28 @@ namespace Apit.Controllers
             return article == null ? Error() : View(article);
         }
 
-        public async Task<IActionResult> List(ArticlesListViewModel model)
+        public IActionResult List(ArticlesListViewModel model)
         {
             ViewData["Title"] = "Articles page title";
 
             switch (model.Filter)
             {
-                case "my":
+                case "all":
                 {
-                    var user = await _userManager.GetUserAsync(User);
-                    model.Collection = _dataManager.Articles.GetByCreator(user.Id)
+                    model.Collection = _dataManager.Articles.GetAll()
                         .OrderBy(a => a.DateLastModified).Reverse();
                     break;
                 }
                 default:
                 {
-                    model.Filter = "all";
-                    model.Collection = _dataManager.Articles.GetAll()
+                    model.Filter = "current";
+                    model.Collection = _dataManager.Conferences.GetCurrent().Articles
                         .OrderBy(a => a.DateLastModified).Reverse();
                     break;
                 }
             }
 
             return View(model);
-        }
-
-        public IActionResult MyArticles()
-        {
-            return Redirect("list?filter=my");
         }
 
 

@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout";
-    var user = await UserManager.GetUserAsync(User);
+    var user = await userManager.GetUserAsync(User);
 }
 
 @if (Model == null)
@@ -19,6 +19,15 @@ else
     else
     {
         <button>Join now!</button>
+    }
+
+    @foreach (var admin in Model.Admins)
+    {
+        <div>
+            <a asp-controller="account" asp-action="index" asp-route-x="@admin.ProfileAddress">
+                @admin.FullName
+            </a>
+        </div>
     }
 
     <div>

@@ -1,12 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
     public class ResourcesController : Controller
     {
-        public IActionResult Get(string id)
+        private readonly ILogger<ResourcesController> _logger;
+
+        public ResourcesController(ILogger<ResourcesController> logger)
         {
-            return Redirect("/");
+            _logger = logger;
+        }
+
+
+        public IActionResult Document(string id)
+        {
+            return LocalRedirect("/");
         }
     }
 }

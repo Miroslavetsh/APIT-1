@@ -20,8 +20,10 @@ namespace Apit.Controllers
 
         public IActionResult Index(string id)
         {
-            if (string.IsNullOrWhiteSpace(id)) Error();
-            var current = _dataManager.Conferences.GetByUniqueAddress(id);
+            var current = string.IsNullOrWhiteSpace(id)
+                ? _dataManager.Conferences.GetCurrent()
+                : _dataManager.Conferences.GetByUniqueAddress(id);
+
             return View(current);
         }
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 namespace BusinessLayer.Interfaces
 {
     public interface IConferencesRepository :
-        ICollectedData<Guid, ConferenceViewModel, Conference>,
+        ICollectedData<Guid, ConferenceViewModel, NewConferenceViewModel>,
         IAddressedData<ConferenceViewModel>
     {
         ConferenceViewModel GetCurrent();
@@ -18,10 +18,10 @@ namespace BusinessLayer.Interfaces
         IEnumerable<User> GetConfAdmins(Conference conference);
         IEnumerable<ArticleViewModel> GetConfArticles(Conference conference);
         IEnumerable<string> GetConfImages(Conference conference);
-        
-        void AddParticipant(User user);
-        void AddAdmin(User user);
-        void AddArticle(Article article);
-        void AddImage(IFormFile image);
+
+        void AddParticipant(Conference conference, User user);
+        void AddAdmin(Conference conference, User user);
+        void AddArticle(Conference conference, Article article);
+        void AddImage(Conference conference, IFormFile image);
     }
 }

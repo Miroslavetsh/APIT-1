@@ -2,19 +2,36 @@
 
 @{
     Layout = "_Layout";
+    var currentConference = dataManager.Conferences.GetCurrent();
+    var articles = dataManager.Articles.GetByCreator(Model.Id)
+        .OrderBy(a => a.DateLastModified).Reverse().ToArray();
 }
-
-<h1>Management page</h1>
 
 <div class="user-info">
     <h2>@Model.LastName @Model.FirstName @Model.MiddleName</h2>
-    <a asp-area="" asp-controller="account" asp-action="edit">Edit profile</a>
+    <a asp-controller="account" asp-action="edit">Налаштування</a>
 </div>
 
 <hr>
 
 <div class="articles-working">
-    <h2>Articles workshop</h2>
-    <a asp-area="" asp-controller="articles" asp-action="create">CREATE</a><br>
-    <a asp-area="" asp-controller="articles" asp-action="myarticles">My Articles</a>
+    <h2>Мої матеріали</h2>
+    @if (currentConference == null)
+    {
+        <a asp-controller="articles" asp-action="create">Створити новий</a>
+        <br>
+    }
+    else
+    {
+        <p>Немає жодної конференції, до якої була би можливість створити матеріал :(</p>
+    }
+
+    @if (articles.Any())
+    {
+        @await Html.PartialAsync("Components/ArticlesList", articles)
+    }
+    else
+    {
+        <p>Порожньо</p>
+    }
 </div>

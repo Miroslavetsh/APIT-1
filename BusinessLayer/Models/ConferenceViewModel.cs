@@ -7,6 +7,8 @@ namespace BusinessLayer.Models
 {
     public class ConferenceViewModel
     {
+        public bool IsActual { get; set; }
+        
         public Guid Id { get; set; }
 
         public string UniqueAddress { get; set; }
@@ -23,6 +25,7 @@ namespace BusinessLayer.Models
 
         [DataType(DataType.Date)] public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)] public DateTime DateLastModified { get; set; }
+        
         [DataType(DataType.DateTime)] public DateTime DateStart { get; set; }
         [DataType(DataType.DateTime)] public DateTime DateFinish { get; set; }
     }

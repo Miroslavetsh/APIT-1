@@ -4,8 +4,8 @@ namespace DatabaseLayer.Enums
 {
     public enum AcademicTitle : short
     {
-        Normal = 0,
-        BestOfTheBest,
-        [Display(Name = "Vety Good Person")] VeryGoodPerson = 254
+        [Display(Name = "Студент(ка)")] Student = 0,
+        [Display(Name = "Доцент")] AssistantProfessor = 1,
+        [Display(Name = "Інше")] Other = 2
     }
 }

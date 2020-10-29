@@ -1,14 +1,34 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Apit.Service;
+using BusinessLayer;
 using BusinessLayer.Models;
-using DatabaseLayer.Enums;
+using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
     public partial class AccountController : Controller
     {
+        private readonly ILogger<AccountController> _logger;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly DataManager _dataManager;
+        private readonly MailService _mailService;
+
+        public AccountController(ILogger<AccountController> logger, SignInManager<User> signInManager,
+            UserManager<User> userManager, DataManager dataManager, MailService mailService)
+        {
+            _logger = logger;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _dataManager = dataManager;
+            _mailService = mailService;
+        }
+
+
         [Authorize]
         public async Task<IActionResult> Index(string x)
         {
@@ -20,7 +40,14 @@ namespace Apit.Controllers
         }
 
         [Authorize]
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            return View(new EditUserViewModel {EmailConfirmed = user.EmailConfirmed});
+        }
+
+        [Route("access-denied")]
+        public IActionResult AccessDenied()
         {
             return View();
         }
@@ -28,15 +55,12 @@ namespace Apit.Controllers
         [Authorize, HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            var isSuccess = true;
-            const string errorMessage = "не вдалось дані змінити";
-            const string successMessage = "дані успішно змінено";
-
             if (!ModelState.IsValid)
-            {
-                model.ResultMessage = errorMessage;
-                return View(model);
-            }
+                return View(new EditUserViewModel
+                {
+                    ResultMessage = "не вдалось дані змінити"
+                });
+
 
             var user = await _userManager.GetUserAsync(User);
 
@@ -56,38 +80,34 @@ namespace Apit.Controllers
             if (!string.IsNullOrWhiteSpace(model.WorkingFor))
                 user.WorkingFor = model.WorkingFor;
 
-            if (!string.IsNullOrWhiteSpace(model.ScienceDegree))
+            if (!string.IsNullOrWhiteSpace(model.AltScienceDegree))
             {
-                if (Enum.TryParse<ScienceDegree>(model.ScienceDegree, out var scienceDegree))
-                {
-                    if (user.ScienceDegree != scienceDegree) user.ScienceDegree = scienceDegree;
-                }
-                else isSuccess = false;
+                var str = model.ScienceDegree.ToString();
+                if (user.ScienceDegree != str) user.ScienceDegree = str;
             }
+            else if (user.ScienceDegree != model.AltScienceDegree)
+                user.ScienceDegree = model.AltScienceDegree;
 
-            if (!string.IsNullOrWhiteSpace(model.AcademicTitle))
+
+            if (!string.IsNullOrWhiteSpace(model.AltAcademicTitle))
             {
-                if (Enum.TryParse<AcademicTitle>(model.AcademicTitle, out var academicTitle))
-                {
-                    if (user.AcademicTitle != academicTitle) user.AcademicTitle = academicTitle;
-                }
-                else isSuccess = false;
+                var strAcad = model.AcademicTitle.ToString();
+                if (user.AcademicTitle != strAcad) user.AcademicTitle = strAcad;
             }
+            else if (user.AcademicTitle != model.AltAcademicTitle)
+                user.AcademicTitle = model.AltAcademicTitle;
 
-            if (!string.IsNullOrWhiteSpace(model.ParticipationForm))
-            {
-                if (Enum.TryParse<ParticipationForm>(model.ParticipationForm, out var participationForm))
-                {
-                    if (user.ParticipationForm != participationForm) user.ParticipationForm = participationForm;
-                }
-                else isSuccess = false;
-            }
+            if (user.ParticipationForm != model.ParticipationForm)
+                user.ParticipationForm = model.ParticipationForm;
 
-            //TODO: tro factor auth with phone number
+
+            //TODO: two-factor auth with phone number
 
             _dataManager.Users.SaveChanges();
 
-            return View(new EditUserViewModel {ResultMessage = isSuccess ? successMessage : errorMessage});
+            _logger.LogDebug($"User {user.ProfileAddress} has changed his data");
+
+            return View(new EditUserViewModel {ResultMessage = "дані успішно змінено"});
         }
     }
 }

@@ -6,15 +6,15 @@ namespace BusinessLayer.Models
     {
         [Required]
         // [UIHint("email")]
-        [Display(Name = "Email")]
+        [Display(Name = "Email")] // It is better to use the Localization and the Resource files.
         public string Email { get; set; }
 
         [Required]
         // [UIHint("password")]
-        [Display(Name = "Password")]
+        [Display(Name = "Password")] // It is better to use the Localization and the Resource files.
         public string Password { get; set; }
 
-        [Display(Name = "Remember me")]
+        [Display(Name = "Remember me")] // It is better to use the Localization and the Resource files.
         public bool RememberMe { get; set; }
         
         public string ReturnUrl { get; set; }

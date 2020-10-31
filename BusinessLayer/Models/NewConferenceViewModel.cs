@@ -6,6 +6,7 @@ using DatabaseLayer.Entities;
 
 namespace BusinessLayer.Models
 {
+    // Why don't we use the ConferenceViewModel for represent the new instance of the Conference?
     public class NewConferenceViewModel
     {
         [Required(ErrorMessage = MSG.OnRequired)]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
@@ -13,7 +14,7 @@ namespace BusinessLayer.Models
 
 
         [Required(ErrorMessage = MSG.OnRequired)]
-        [Display(Name = "Короткий опис")]
+        [Display(Name = "Назва")]
         public string Title { get; set; }
 
 
@@ -27,13 +28,15 @@ namespace BusinessLayer.Models
 
 
         [Required(ErrorMessage = "Вкажіть як мінімум одну тему")]
+        [Display(Name = "Теми")]
         public string[] Topics { get; set; }
 
         [Display(Name = "Адміністрація конференції")]
-        public ConferenceAdmin[] Admins { get; set; }
+        public string[] AdminKeys { get; set; }
 
-        
-        
+        public IList<ConferenceAdmin> Admins { get; set; }
+
+
         [Required(ErrorMessage = MSG.OnRequired)]
         [DataType(DataType.DateTime)]
         public DateTime DateStart { get; set; }

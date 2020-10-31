@@ -55,7 +55,7 @@ namespace BusinessLayer.Repositories
             if (current != null) current.IsActual = false;
             else current = null;
 
-            var dateNow = new DateTime();
+            var dateNow = DateTime.Now;
 
             var newConference = new Conference(entity.Admins, entity.Topics)
             {
@@ -75,13 +75,10 @@ namespace BusinessLayer.Repositories
 
             _ctx.Conferences.Add(newConference);
 
-            foreach (var admin in entity.Admins)
+            foreach (var admin in newConference.Admins)
             {
-                _ctx.ConfAdmins.Add(new ConferenceAdmin
-                {
-                    Id = admin.Id,
-                    Conference = newConference
-                });
+                admin.Conference = newConference;
+                _ctx.ConfAdmins.Add(admin);
             }
 
             SaveChanges();

@@ -6,24 +6,28 @@ using BusinessLayer.Models;
 using BusinessLayer;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
     public partial class ArticlesController : Controller
     {
+        private readonly ILogger<ArticlesController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
 
         private readonly Regex _keyWordsAvailableRegex;
         private readonly Regex _keyWordsSeparatorRegex;
 
-        public ArticlesController(UserManager<User> userManager, DataManager dataManager)
+        public ArticlesController(ILogger<ArticlesController> logger,
+            UserManager<User> userManager, DataManager dataManager)
         {
+            _logger = logger;
             _userManager = userManager;
             _dataManager = dataManager;
 
-            _keyWordsAvailableRegex = new Regex("^[a-zA-Z0-9 ,';]+$", RegexOptions.Compiled);
-            _keyWordsSeparatorRegex = new Regex("[;, ]", RegexOptions.Compiled);
+            _keyWordsAvailableRegex = new Regex("^[а-яА-Яa-zA-Z0-9 ,;'іїєґ]+$", RegexOptions.Compiled);
+            _keyWordsSeparatorRegex = new Regex("[ ,;]", RegexOptions.Compiled);
         }
 
 
@@ -56,6 +60,11 @@ namespace Apit.Controllers
             }
 
             return View(model);
+        }
+
+        public IActionResult Example()
+        {
+            return View();
         }
 
 

@@ -47,15 +47,22 @@ namespace Apit.Controllers
             {
                 if (isFirst)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, "admin");
-                    if (!roleResult.Succeeded)
-                        ModelState.AddModelError(string.Empty, "You are not admin!");
+                    var roleResult = await _userManager.AddToRoleAsync(user, "superman");
+
+                    if (roleResult.Succeeded)
+                    {
+                        roleResult = await _userManager.AddToRoleAsync(user, "organizer");
+
+                        if (!roleResult.Succeeded)
+                            _logger.LogInformation("First user authorized as admin with full access");
+                    }
+                    else ModelState.AddModelError(string.Empty, "You are not admin!");
                 }
 
                 string confirmationToken = _userManager.GenerateEmailConfirmationTokenAsync(user).Result;
 
                 string confirmationLink = Url.Action
-                ("confirmemail", "account", new
+                ("ConfirmEmail", "account", new
                 {
                     id = user.Id,
                     token = confirmationToken
@@ -64,6 +71,7 @@ namespace Apit.Controllers
                 _mailService.SendEmail(user.Email,
                     "Confirm your email | Підтвердіть Вашу пошту",
                     confirmationLink);
+                _logger.LogDebug("Confirmation email was sent to: " + user.Email);
 
                 await _signInManager.SignInAsync(user, false);
                 _logger.LogDebug($"User {user.ProfileAddress} has successfully registered");
@@ -77,18 +85,24 @@ namespace Apit.Controllers
         }
 
 
+        [Route("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string id, string token)
         {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(token))
+                return View("Error");
+
             var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return View("Error");
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             if (result.Succeeded)
             {
-                _logger.LogDebug($"User {user.ProfileAddress} confirmed his mail");
+                _logger.LogDebug($"User {user.ProfileAddress} confirmed mail");
                 ViewBag.Message = "Email confirmed successfully!";
                 return View("Success");
             }
 
+            _logger.LogError($"User {user.ProfileAddress} NOT confirmed mail");
             ViewBag.Message = "Error while confirming your email!";
             return View("Error");
         }

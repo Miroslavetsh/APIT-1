@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
@@ -39,23 +40,15 @@ namespace Apit.Controllers
                     var user = await _userManager.GetUserAsync(User);
 
                     if (user == article.Creator) _dataManager.Articles.Delete(articleId);
-                    else
-                    {
-                        ModelState.AddModelError(nameof(ArticleViewModel.Creator),
-                            "доступ заблоковано!");
-                    }
+                    else ModelState.AddModelError(nameof(ArticleViewModel.Creator), "доступ заблоковано");
                 }
-                else
-                {
-                    ModelState.AddModelError(nameof(ArticleViewModel.UniqueAddress),
-                        "такої статті не існує");
-                }
+                else ModelState.AddModelError(nameof(ArticleViewModel.UniqueAddress), "такої статті не існує");
 
-                return Redirect(returnUrl ?? "/");
+                return LocalRedirect(returnUrl ?? "/");
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError("Article not deleted with exception: " + e);
                 return Error();
             }
         }

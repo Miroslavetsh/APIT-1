@@ -11,15 +11,18 @@
 }
 else
 {
-    @if (Model.Participants.Contains(user))
+    @if (Model.Participants.Contains(user) || Model.Admins.Contains(user))
     {
         <p>You arleady subscribed</p>
-        <button>Unsubscribe</button>
+        <button type="submit" asp-action="Unsubscribe" asp-controller="conference">Unsubscribe</button>
     }
     else
     {
-        <button>Join now!</button>
+        <button type="submit" asp-action="JoinNow" asp-controller="conference">Join now!</button>
     }
+
+    @ViewBag.ResultMessage
+
 
     @foreach (var admin in Model.Admins)
     {
@@ -32,14 +35,5 @@ else
 
     <div>
         <p>@Model.Description</p>
-        <div>
-            <h3>Admins</h3>
-            <ul>
-                @foreach (var admin in Model.Admins)
-                {
-                    <li>@admin.FullName</li>
-                }
-            </ul>
-        </div>
     </div>
 }

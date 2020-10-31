@@ -4,47 +4,20 @@ using DatabaseLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201028084824_Development_3c")]
-    partial class Development_3c
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("DatabaseLayer.Entities.AdminPermissions", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("CanAddAdmins")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CanEditContent")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CanSendMailing")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AdminPermissions");
-                });
 
             modelBuilder.Entity("DatabaseLayer.Entities.Article", b =>
                 {
@@ -145,20 +118,28 @@ namespace DatabaseLayer.Migrations
 
             modelBuilder.Entity("DatabaseLayer.Entities.ConferenceAdmin", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("CanAddAdmins")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanEditContent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanSendMailing")
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("ConferenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PermissionsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConferenceId");
-
-                    b.HasIndex("PermissionsId");
 
                     b.ToTable("ConfAdmins");
                 });
@@ -184,11 +165,15 @@ namespace DatabaseLayer.Migrations
 
             modelBuilder.Entity("DatabaseLayer.Entities.ConferenceParticipant", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ConferenceId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -342,9 +327,17 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c1915b23-c4d0-470d-b30f-c0aec168f7db",
-                            ConcurrencyStamp = "cfdabefe-0e14-4066-b47e-c8971864085b",
-                            Name = "admin"
+                            Id = "c664fe35-a376-4c80-b8b5-adac7e40084d",
+                            ConcurrencyStamp = "9569b820-ba19-42f3-9712-eda796645711",
+                            Name = "superman",
+                            NormalizedName = "SUPERMAN"
+                        },
+                        new
+                        {
+                            Id = "cf6379fe-a7d6-4e98-82bd-6c55b03a93b8",
+                            ConcurrencyStamp = "95c6b5b4-0646-421b-a9b2-8063bb0ed877",
+                            Name = "organizer",
+                            NormalizedName = "ORGANIZER"
                         });
                 });
 
@@ -452,13 +445,6 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("DatabaseLayer.Entities.AdminPermissions", b =>
-                {
-                    b.HasOne("DatabaseLayer.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("DatabaseLayer.Entities.Article", b =>
                 {
                     b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
@@ -475,10 +461,6 @@ namespace DatabaseLayer.Migrations
                     b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
                         .WithMany("Admins")
                         .HasForeignKey("ConferenceId");
-
-                    b.HasOne("DatabaseLayer.Entities.AdminPermissions", "Permissions")
-                        .WithMany()
-                        .HasForeignKey("PermissionsId");
                 });
 
             modelBuilder.Entity("DatabaseLayer.Entities.ConferenceImage", b =>

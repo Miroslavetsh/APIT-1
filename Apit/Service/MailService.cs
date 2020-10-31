@@ -18,6 +18,12 @@ namespace Apit.Service
         }
 
 
+        /// <summary>
+        /// Send email via default configured SMTP-client
+        /// </summary>
+        /// <param name="recipient">User email address</param>
+        /// <param name="subject">Mail title</param>
+        /// <param name="body">Mail content (supports HTML)</param>
         public void SendEmail(string recipient, string subject, string body)
         {
             try
@@ -42,7 +48,7 @@ namespace Apit.Service
                 client.Send(message);
 
                 client.Disconnect(true);
-                _logger.LogInformation("Email sent successfully to recipient: " + recipient);
+                _logger.LogInformation("Email sent to recipient: " + recipient);
             }
             catch (Exception e)
             {

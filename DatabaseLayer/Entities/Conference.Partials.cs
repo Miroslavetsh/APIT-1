@@ -1,38 +1,33 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DatabaseLayer.Entities
 {
     public class ConferenceParticipant
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+        [Required] public string UserId { get; set; }
 
-        public Conference Conference { get; set; }
+        [Required] public Conference Conference { get; set; }
     }
 
     public class ConferenceAdmin
     {
-        public string Id { get; set; }
-        public AdminPermissions Permissions { get; set; }
+        public Guid Id { get; set; }
+        [Required] public string UserId { get; set; }
+        [Required] public Conference Conference { get; set; }
 
-        public Conference Conference { get; set; }
+
+        public bool CanAddAdmins { get; set; }
+        public bool CanEditContent { get; set; }
+        public bool CanSendMailing { get; set; }
     }
 
     public class ConferenceImage
     {
         public Guid Id { get; set; }
-        public string ImagePath { get; set; }
+        [Required] public string ImagePath { get; set; }
 
-        public Conference Conference { get; set; }
-    }
-
-    public class AdminPermissions
-    {
-        public Guid Id { get; set; }
-
-        public bool CanAddAdmins { get; set; }
-        public bool CanEditContent { get; set; }
-        public bool CanSendMailing { get; set; }
-
-        public User User { get; set; }
+        [Required] public Conference Conference { get; set; }
     }
 }

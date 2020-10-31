@@ -2,7 +2,7 @@
 
 <h1>Articles list</h1>
 
-@if (!Model.Any())
+@if (!Model?.Any() ?? true)
 {
     <h2>Empty.</h2>
 }

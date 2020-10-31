@@ -2,28 +2,80 @@
 
 @{
     Layout = "_Layout";
-    var currentConference = dataManager.Conferences.GetCurrent();
+    var user = await userManager.GetUserAsync(User);
+    bool isOwnPage = user.Id == Model.Id;
+
+    var conference = dataManager.Conferences.GetCurrent();
     var articles = dataManager.Articles.GetByCreator(Model.Id)
         .OrderBy(a => a.DateLastModified).Reverse().ToArray();
 }
 
 <div class="user-info">
     <h2>@Model.LastName @Model.FirstName @Model.MiddleName</h2>
-    <a asp-controller="account" asp-action="edit">Налаштування</a>
+    @if (isOwnPage)
+    {
+        @if (user.EmailConfirmed)
+        {
+            <a asp-controller="account" asp-action="edit">Налаштування</a>
+        }
+        else
+        {
+            <p>Підтвердіть, будь ласка, Вашу пошту</p>
+        }
+    }
 </div>
 
 <hr>
 
-<div class="articles-working">
-    <h2>Мої матеріали</h2>
-    @if (currentConference == null)
+@if (isOwnPage)
+{
+    <div class="conferences-workshop">
+        @if (conference != null)
+        {
+            @if (conference.Admins.Contains(user))
+            {
+                <a asp-action="edit" asp-controller="conference">EDIT</a>
+                <a asp-action="moveToArchive" asp-controller="conference">Move to archive</a>
+
+                @if (conference.Participants.All(item => item == null))
+                {
+                    <a asp-action="delete" asp-controller="conference">Delete</a>
+                }
+            }
+            <a asp-action="index" asp-controller="conference">Current conference</a>
+        }
+        else
+        {
+            @if (await userManager.IsInRoleAsync(user, "organizer"))
+            {
+                <a asp-action="create" asp-controller="conference">CREATE</a>
+            }
+            else
+            {
+                <p>Наразі не заплановано жодної конференції</p>
+            }
+        }
+        <a asp-action="archive" asp-controller="conference">Archive</a>
+    </div>
+}
+
+<div class="articles-workshop">
+    @if (isOwnPage)
     {
-        <a asp-controller="articles" asp-action="create">Створити новий</a>
-        <br>
+        <h2>Мої матеріали</h2>
+        @if (conference != null)
+        {
+            <a asp-controller="articles" asp-action="create">Створити новий</a>
+            <br>
+        }
+        else
+        {
+            <p>Немає жодної конференції, до якої була би можливість створити матеріал :(</p>
+        }
     }
     else
     {
-        <p>Немає жодної конференції, до якої була би можливість створити матеріал :(</p>
+        <p>Матеріали від автора</p>
     }
 
     @if (articles.Any())

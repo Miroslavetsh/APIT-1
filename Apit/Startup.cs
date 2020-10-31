@@ -1,20 +1,19 @@
 using System;
-using Apit.Service;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Apit.Service;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
 using BusinessLayer;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Repositories;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Apit
 {
@@ -32,9 +31,13 @@ namespace Apit
         // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Set configuration singleton from appsettings.json file
             var projConfig = new ProjectConfig();
             Configuration.Bind("Project", projConfig);
             services.AddSingleton(projConfig);
+
+            var SECURITY = new SecurityConfig();
+            Configuration.Bind("Security", SECURITY);
 
             services.AddTransient<MailService>();
 
@@ -52,41 +55,42 @@ namespace Apit
 
             services.AddDefaultIdentity<User>(options =>
                 {
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                    options.Lockout.MaxFailedAccessAttempts = 5;
-                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(SECURITY.Lockout.LockoutTimeSpan);
+                    options.Lockout.MaxFailedAccessAttempts = SECURITY.Lockout.MaxFailedAccessAttempts;
+                    options.Lockout.AllowedForNewUsers = SECURITY.Lockout.AllowedForNewUsers;
 
-                    options.Password.RequiredLength = 4;
-                    options.Password.RequiredUniqueChars = 1;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = SECURITY.Password.RequiredLength;
+                    options.Password.RequiredUniqueChars = SECURITY.Password.RequiredUniqueChars;
+                    options.Password.RequireNonAlphanumeric = SECURITY.Password.RequireNonAlphanumeric;
+                    options.Password.RequireLowercase = SECURITY.Password.RequireLowercase;
+                    options.Password.RequireUppercase = SECURITY.Password.RequireUppercase;
+                    options.Password.RequireDigit = SECURITY.Password.RequireDigit;
 
-                    options.User.RequireUniqueEmail = true;
+                    options.User.RequireUniqueEmail = SECURITY.User.RequireUniqueEmail;
 
-                    options.SignIn.RequireConfirmedPhoneNumber = false;
-                    options.SignIn.RequireConfirmedAccount = false;
+                    options.SignIn.RequireConfirmedPhoneNumber = SECURITY.SignIn.RequireConfirmedPhoneNumber;
+                    options.SignIn.RequireConfirmedAccount = SECURITY.SignIn.RequireConfirmedAccount;
                 }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/account/access-denied";
-                options.Cookie.Name = "APIT";
+                options.Cookie.Name = SECURITY.User.CookieName;
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(SECURITY.User.ExpireTimeSpanMinutes);
                 options.LoginPath = "/account/login";
-                // ReturnUrlParameter requires 
-                //using Microsoft.AspNetCore.Authentication.Cookies;
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-                options.SlidingExpiration = true;
+                options.SlidingExpiration = SECURITY.User.SlidingExpiration;
             });
 
+            bool res = Enum.TryParse<PasswordHasherCompatibilityMode>
+                (SECURITY.Password.HasherCompatibilityMode, out var hasherMode);
+            if (!res) throw new ArgumentException(nameof(SECURITY.Password.HasherCompatibilityMode));
             services.Configure<PasswordHasherOptions>(options =>
             {
-                options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV3;
-                options.IterationCount = 10_000;
+                options.CompatibilityMode = hasherMode;
+                options.IterationCount = SECURITY.Password.HasherIterationCount;
             });
 
 
@@ -94,7 +98,7 @@ namespace Apit
             services.AddAuthorization(x =>
             {
                 x.AddPolicy("AdminArea",
-                    policy => policy.RequireRole("admin"));
+                    policy => policy.RequireRole("superman"));
             });
 
             // To use MVC
@@ -121,7 +125,7 @@ namespace Apit
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/home/error");
                 // The default HSTS value is 30 days.
                 // You may want to change this for production scenarios,
                 // see https://aka.ms/aspnetcore-hsts.

@@ -1,5 +1,22 @@
 ﻿@model string
 
+@{
+    var user = await userManager.GetUserAsync(User);
+}
+
 <h1>@Model</h1>
 <p>@ViewBag.Message</p>
+
+
+@if (user != null)
+{
+    <a class="nav-link text-dark" asp-controller="account" asp-action="index"
+       asp-route-x="@user.ProfileAddress" title="Manage">
+        Return to my page
+    </a>
+}
+else
+{
+    <a asp-action="login" asp-controller="account">Log in</a>
+}
 <hr>

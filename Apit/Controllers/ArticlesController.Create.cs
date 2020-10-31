@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Apit.Service;
 using BusinessLayer.DataServices;
@@ -7,6 +8,7 @@ using DatabaseLayer.Entities;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
@@ -24,33 +26,12 @@ namespace Apit.Controllers
         [HttpPost, Authorize]
         public async Task<IActionResult> Create(NewArticleViewModel model)
         {
+            if (!ModelState.IsValid) return View(model);
+
             // Combine all errors and return them back if this variable is set to true
             bool hasIncorrectData = false;
 
-            #region ================ Long form review code ================
-
-            // Check unique address field value
-            model.UniqueAddress.NormalizeAddress();
-
-            if (model.UniqueAddress.Length < 5)
-            {
-                ModelState.AddModelError(nameof(NewArticleViewModel.UniqueAddress),
-                    "адреса закоротка (потрібна довжина 5-25 символів)");
-                hasIncorrectData = true;
-            }
-            else if (model.UniqueAddress.Length > 25)
-            {
-                ModelState.AddModelError(nameof(NewArticleViewModel.UniqueAddress),
-                    "адреса задовга (потрібна довжина 5-20 символів)");
-                hasIncorrectData = true;
-            }
-            else if (_dataManager.Articles.GetByUniqueAddress(model.UniqueAddress) != null)
-            {
-                ModelState.AddModelError(nameof(NewArticleViewModel.UniqueAddress),
-                    "ця адреса вже використовується, оберіть іншу");
-                hasIncorrectData = true;
-            }
-
+            #region ================ Long form review ================
 
             // Check selected topic existing
             var topic = model.TopicId == null ? null : _dataManager.Topics.GetById(Guid.Parse(model.TopicId));
@@ -62,7 +43,8 @@ namespace Apit.Controllers
             }
 
             // Check uploaded file
-            var extension = DataUtil.GetExtension(model.DocFile.FileName);
+            var extension = Path.GetExtension(model.DocFile.FileName);
+            _logger.LogInformation("Upload file with extension: " + extension);
             if (model.DocFile.Length > 0)
             {
                 if (extension != "doc" && extension != "docx")

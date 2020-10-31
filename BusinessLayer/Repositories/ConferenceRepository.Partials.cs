@@ -12,10 +12,10 @@ namespace BusinessLayer.Repositories
     public partial class ConferenceRepository
     {
         public IEnumerable<User> GetConfParticipants(Conference conference) =>
-            _ctx.ConfParticipants.Where(a => a.Conference == conference).Select(a => _users.GetById(a.Id));
+            _ctx.ConfParticipants.Where(a => a.Conference == conference).Select(a => _users.GetById(a.UserId));
 
         public IEnumerable<User> GetConfAdmins(Conference conference) =>
-            _ctx.ConfAdmins.Where(a => a.Conference == conference).Select(a => _users.GetById(a.Id));
+            _ctx.ConfAdmins.Where(a => a.Conference == conference).Select(a => _users.GetById(a.UserId));
 
         public IEnumerable<ArticleViewModel> GetConfArticles(Conference conference) =>
             _ctx.Articles.Where(a => a.Conference == conference).Select(a => _articles.GetById(a.Id));
@@ -26,7 +26,7 @@ namespace BusinessLayer.Repositories
 
         public void AddParticipant(Conference conference, User user)
         {
-            if (conference.Participants.Any(a => a.Id == user.Id))
+            if (conference.Participants.Any(a => a.UserId == user.Id))
             {
                 Console.WriteLine($"Conference {conference.Id} already contains participant {user.Id}");
                 return;
@@ -34,22 +34,28 @@ namespace BusinessLayer.Repositories
 
             conference.Participants.Add(new ConferenceParticipant
             {
-                Id = user.Id,
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
                 Conference = conference
             });
         }
 
         public void AddAdmin(Conference conference, User user)
         {
-            if (conference.Admins.Any(a => a.Id == user.Id))
+            if (conference.Admins.Any(a => a.UserId == user.Id))
             {
                 Console.WriteLine($"Conference {conference.Id} already contains admin {user.Id}");
                 return;
             }
 
+            var participant = conference.Participants.FirstOrDefault(a => a.UserId == user.Id);
+            if (participant != null)
+                conference.Participants.Remove(new ConferenceParticipant {Id = participant.Id});
+
             conference.Admins.Add(new ConferenceAdmin
             {
-                Id = user.Id,
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
                 Conference = conference
             });
         }
@@ -67,7 +73,7 @@ namespace BusinessLayer.Repositories
 
         public void AddImage(Conference conference, IFormFile image)
         {
-            var extension = "." + DataUtil.GetExtension(image.FileName);
+            var extension = "." + Path.GetExtension(image.FileName);
             var filePath = Path.Combine(DataUtil.IMAGES_DIR, Guid.NewGuid() + extension);
             DataUtil.SaveFile(image, filePath);
 

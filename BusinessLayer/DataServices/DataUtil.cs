@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -9,9 +8,9 @@ namespace BusinessLayer.DataServices
 {
     public static class DataUtil
     {
-        public const string DOCS_DIR = "../Local/Articles/Docs/";
-        public const string HTML_DIR = "../Local/Articles/Html/";
-        public const string IMAGES_DIR = "../Local/Articles/Gallery/";
+        public const string DOCS_DIR = "../../Local/Articles/Docs/";
+        public const string HTML_DIR = "../../Local/Articles/Html/";
+        public const string IMAGES_DIR = "../../Local/Articles/Gallery/";
 
         public static string GenerateUniqueAddress<TKey>(IAddressedData<TKey> data, int length)
         {
@@ -46,11 +45,35 @@ namespace BusinessLayer.DataServices
 
         internal static async Task<string> LoadHtmlFile(string fileName)
         {
-            var htmlPath = Path.Combine(HTML_DIR, fileName);
+            var htmlPath = Path.Combine(Directory.GetCurrentDirectory(), HTML_DIR, fileName);
             using var file = new StreamReader(htmlPath);
             return await file.ReadToEndAsync();
         }
 
-        public static string GetExtension(string name) => name.Split('.').Last();
+        public static PhysicalFileData LoadDocFile(string fileName)
+        {
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), DOCS_DIR, fileName);
+            if (!File.Exists(filePath)) return null;
+
+            string mimeType;
+            switch (Path.GetExtension(fileName))
+            {
+                case "doc":
+                    mimeType = MIME.DOC;
+                    break;
+                case "docx":
+                    mimeType = MIME.DOCX;
+                    break;
+                default:
+                    return null;
+            }
+
+            return new PhysicalFileData
+            {
+                FilePath = filePath,
+                MimeType = mimeType,
+                FileName = fileName
+            };
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace Apit.Controllers
 
             if (result.Succeeded)
             {
-                _logger.LogDebug($"User {user.ProfileAddress} has successfully logged in");
+                _logger.LogDebug($"User {user.ProfileAddress} has logged in");
                 return LocalRedirect(model.ReturnUrl ?? "/");
             }
 
@@ -40,6 +40,25 @@ namespace Apit.Controllers
             _logger.LogDebug("User logged out");
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        
+        [Route("change-password")]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [Route("send-reset"), HttpPost]
+        public IActionResult SendReset(string email)
+        {
+            return View("login");
+        }
+
+        [Route("change-password"), HttpPost]
+        public IActionResult ChangePassword(string email)
+        {
+            return View("success");
         }
     }
 }

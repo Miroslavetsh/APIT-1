@@ -61,7 +61,7 @@ namespace Apit.Controllers
             var conference = _dataManager.Conferences.GetCurrentAsDbModel();
 
             _dataManager.Conferences.AddParticipant(conference, user);
-            ViewBag.ResultMessage = "<span>Ви больше не с нами, идите пж отседого</span>";
+            ViewBag.ResultMessage = "<span>Ви больше не с нами</span>";
             return View("index");
         }
 

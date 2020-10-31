@@ -11,18 +11,20 @@
 }
 else
 {
-    @if (Model.Participants.Contains(user) || Model.Admins.Contains(user))
+    if (!Model.Admins.Contains(user))
     {
-        <p>You arleady subscribed</p>
-        <button type="submit" asp-action="Unsubscribe" asp-controller="conference">Unsubscribe</button>
-    }
-    else
-    {
-        <button type="submit" asp-action="JoinNow" asp-controller="conference">Join now!</button>
-    }
+        @if (Model.Participants.Contains(user))
+        {
+            <p>You arleady subscribed</p>
+            <a asp-action="Unsubscribe" asp-controller="conference">Unsubscribe</a>
+        }
+        else
+        {
+            <a asp-action="JoinNow" asp-controller="conference">Join now!</a>
+        }
 
-    @ViewBag.ResultMessage
-
+        @ViewBag["ResultMessage"]
+    }
 
     @foreach (var admin in Model.Admins)
     {

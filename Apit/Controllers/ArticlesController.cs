@@ -33,6 +33,9 @@ namespace Apit.Controllers
 
         public IActionResult Index(string id)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("login", "account");
+
             if (string.IsNullOrWhiteSpace(id)) Error();
             var article = _dataManager.Articles.GetByUniqueAddress(id);
             return article == null ? Error() : View(article);
@@ -40,6 +43,9 @@ namespace Apit.Controllers
 
         public IActionResult List(ArticlesListViewModel model)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("login", "account");
+
             ViewData["Title"] = "Articles page title";
 
             switch (model.Filter)
@@ -64,6 +70,9 @@ namespace Apit.Controllers
 
         public IActionResult Example()
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("login", "account");
+            
             return View();
         }
 

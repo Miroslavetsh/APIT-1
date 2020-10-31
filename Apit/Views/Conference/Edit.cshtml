@@ -1,8 +1,81 @@
 ﻿@model ConferenceViewModel
+@inject ProjectConfig ProjectConfig
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
+
+    var config = ProjectConfig.Content.Conference;
+    var user = await userManager.GetUserAsync(User);
+
 }
 
-<h2>title</h2>
+
+<form method="post" asp-controller="conference" asp-action="edit"
+      asp-route-returnUrl="@Url.Action("index", "conference")">
+    <div asp-validation-summary="All">
+        <div>
+            <label asp-for="UniqueAddress"></label>
+            <input asp-for="UniqueAddress" type="text" placeholder="@Model.UniqueAddress">
+            <span asp-validation-for="UniqueAddress"></span>
+        </div>
+
+        <div>
+            <label asp-for="Title"></label>
+            <input asp-for="Title" type="text" maxlength="@config.TitleMaxLength">
+            <span asp-validation-for="Title"></span>
+        </div>
+        <div>
+            <label asp-for="ShortDescription"></label>
+            <textarea asp-for="ShortDescription" maxlength="@config.ShortDescriptionMaxLength">
+                @Model.ShortDescription
+            </textarea>
+            <span asp-validation-for="ShortDescription"></span>
+        </div>
+        <div>
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description">
+                @Model.Description
+            </textarea>
+            <span asp-validation-for="Description"></span>
+        </div>
+
+        <div>
+            <label asp-for="AdminKeys"></label>
+            @foreach (var admin in Model.Admins)
+            {
+                <div>
+                    <span>@admin.FullName</span>
+                    <input type="text" asp-for="AdminKeys" value="@admin.ProfileAddress">
+                    <span asp-validation-for="AdminKeys"></span>
+                </div>
+            }
+        </div>
+
+        <div>
+            <label asp-for="Topics"></label>
+            <span asp-validation-for="Topics"></span>
+            <div>
+                <input type="text" asp-for="Topics" maxlength="@config.TitleMaxLength">
+            </div>
+            <div>
+                <input type="text" asp-for="Topics" maxlength="@config.TitleMaxLength">
+            </div>
+        </div>
+
+        <div>
+            <label asp-for="DateStart"></label>
+            <input asp-for="DateStart" type="date" value="@Model.DateStart">
+            <span asp-validation-for="DateStart"></span>
+        </div>
+        <div>
+            <label asp-for="DateFinish"></label>
+            <input asp-for="DateFinish" type="date" value="@Model.DateFinish">
+            <span asp-validation-for="DateFinish"></span>
+        </div>
+
+        <div>
+            <input type="submit" value="Publish">
+        </div>
+    </div>
+</form>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Apit.Service;
 using BusinessLayer;
 using BusinessLayer.Models;
+using DatabaseLayer;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
-    [Authorize(Roles = "organizer")]
+    [Authorize(Roles = RoleNames.ORGANIZER + ", " + RoleNames.ADMIN)]
     public partial class ConferenceController : Controller
     {
         private readonly ILogger<ConferenceController> _logger;
@@ -50,19 +51,24 @@ namespace Apit.Controllers
             var conference = _dataManager.Conferences.GetCurrentAsDbModel();
 
             _dataManager.Conferences.AddParticipant(conference, user);
-            ViewBag.ResultMessage = "<span>Добро пожаловать!</span>";
-            return View("index");
+            _dataManager.Conferences.SaveChanges();
+
+            ViewBag["ResultMessage"] = "<span>Добро пожаловать!</span>";
+            return RedirectToAction("index", "conference");
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> Unsubscribe()
         {
             var user = await _userManager.GetUserAsync(User);
             var conference = _dataManager.Conferences.GetCurrentAsDbModel();
 
-            _dataManager.Conferences.AddParticipant(conference, user);
-            ViewBag.ResultMessage = "<span>Ви больше не с нами</span>";
-            return View("index");
+            _logger.LogDebug("Id" + user.Id);
+
+            _dataManager.Conferences.RemoveParticipant(conference, user);
+            _dataManager.Conferences.SaveChanges();
+
+            ViewBag["ResultMessage"] = "<span>Ви больше не с нами</span>";
+            return RedirectToAction("index", "conference");
         }
 
         [AllowAnonymous]

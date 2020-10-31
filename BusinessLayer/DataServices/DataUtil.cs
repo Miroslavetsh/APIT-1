@@ -8,9 +8,9 @@ namespace BusinessLayer.DataServices
 {
     public static class DataUtil
     {
-        public const string DOCS_DIR = "../../Local/Articles/Docs/";
-        public const string HTML_DIR = "../../Local/Articles/Html/";
-        public const string IMAGES_DIR = "../../Local/Articles/Gallery/";
+        public const string DOCS_DIR = "../../Local/Docs/";
+        public const string HTML_DIR = "../../Local/Html/";
+        public const string IMAGES_DIR = "../../Local/Gallery/";
 
         public static string GenerateUniqueAddress<TKey>(IAddressedData<TKey> data, int length)
         {

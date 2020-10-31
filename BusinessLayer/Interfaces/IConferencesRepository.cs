@@ -23,5 +23,10 @@ namespace BusinessLayer.Interfaces
         void AddAdmin(Conference conference, User user);
         void AddArticle(Conference conference, Article article);
         void AddImage(Conference conference, IFormFile image);
+
+        void RemoveParticipant(Conference conference, User user);
+        void RemoveAdmin(Conference conference, User user);
+        void RemoveArticle(Conference conference, Article article);
+        void RemoveImage(Conference conference, string path);
     }
 }

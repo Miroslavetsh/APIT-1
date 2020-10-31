@@ -35,8 +35,8 @@ namespace DatabaseLayer
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
-                    Name = "superman",
-                    NormalizedName = "SUPERMAN"
+                    Name = "admin",
+                    NormalizedName = "ADMIN"
                 }, new IdentityRole
                 {
                     Name = "organizer",

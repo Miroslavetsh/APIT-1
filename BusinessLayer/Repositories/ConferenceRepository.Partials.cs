@@ -32,12 +32,15 @@ namespace BusinessLayer.Repositories
                 return;
             }
 
-            conference.Participants.Add(new ConferenceParticipant
+            var participant = new ConferenceParticipant
             {
                 Id = Guid.NewGuid(),
                 UserId = user.Id,
                 Conference = conference
-            });
+            };
+
+            conference.Participants.Add(participant);
+            _ctx.ConfParticipants.Add(participant);
         }
 
         public void AddAdmin(Conference conference, User user)
@@ -50,14 +53,20 @@ namespace BusinessLayer.Repositories
 
             var participant = conference.Participants.FirstOrDefault(a => a.UserId == user.Id);
             if (participant != null)
+            {
                 conference.Participants.Remove(new ConferenceParticipant {Id = participant.Id});
+                _ctx.ConfParticipants.Remove(participant);
+            }
 
-            conference.Admins.Add(new ConferenceAdmin
+            var organizer = new ConferenceAdmin
             {
                 Id = Guid.NewGuid(),
                 UserId = user.Id,
                 Conference = conference
-            });
+            };
+
+            conference.Admins.Add(organizer);
+            _ctx.ConfAdmins.Add(organizer);
         }
 
         public void AddArticle(Conference conference, Article article)
@@ -69,20 +78,58 @@ namespace BusinessLayer.Repositories
             }
 
             conference.Articles.Add(article);
+            _ctx.Articles.Add(article);
         }
 
-        public void AddImage(Conference conference, IFormFile image)
+        public void AddImage(Conference conference, IFormFile imageFile)
         {
-            var extension = "." + Path.GetExtension(image.FileName);
+            var extension = "." + Path.GetExtension(imageFile.FileName);
             var filePath = Path.Combine(DataUtil.IMAGES_DIR, Guid.NewGuid() + extension);
-            DataUtil.SaveFile(image, filePath);
+            DataUtil.SaveFile(imageFile, filePath);
 
-            conference.Images.Add(new ConferenceImage
+            var image = new ConferenceImage
             {
                 Id = Guid.NewGuid(),
                 ImagePath = filePath,
                 Conference = conference,
-            });
+            };
+
+            conference.Images.Add(image);
+            _ctx.ConfImages.Add(image);
+        }
+
+
+        public void RemoveParticipant(Conference conference, User user)
+        {
+            var participant = _ctx.ConfParticipants.FirstOrDefault(a => a.UserId == user.Id);
+            if (participant == null) return;
+
+            conference.Participants.Remove(participant);
+            _ctx.ConfParticipants.Remove(participant);
+        }
+
+        public void RemoveAdmin(Conference conference, User user)
+        {
+            var organizer = _ctx.ConfAdmins.FirstOrDefault(a => a.UserId == user.Id);
+            if (organizer == null) throw new KeyNotFoundException(nameof(user.Id));
+
+            conference.Admins.Add(organizer);
+            _ctx.ConfAdmins.Add(organizer);
+        }
+
+        public void RemoveArticle(Conference conference, Article article)
+        {
+            conference.Articles.Add(article);
+            _ctx.Articles.Add(article);
+        }
+
+        public void RemoveImage(Conference conference, string path)
+        {
+            var image = conference.Images.FirstOrDefault(a => a.ImagePath == path);
+            if (image == null) throw new KeyNotFoundException(nameof(path));
+
+            conference.Images.Add(image);
+            _ctx.ConfImages.Add(image);
         }
     }
 }

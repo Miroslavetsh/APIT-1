@@ -1,14 +1,33 @@
-﻿# APIT
-> version 1.0.0 alpha
+﻿# APIT - 2020
+> version 1.0.1 alpha
 
-Get started in back-end
--------------------------
+| Role       | Developer           | GitHub    | 
+|------------|---------------------|-----------| 
+| back-end   | Yurii Yermakav      | JuriLents | 
+| front-end  | Miroslav Toloshnyi  | MiTo      | 
+| testing    | Donylo Baida        | Dan4ef    | 
 
-### Add new migration
+-----------------------------------------------------------------------------------
 
-Open terminal (cmd.exe / PowerShell / Terminal.app / ...)
+## Get started in back-end
 
-1. `dotnet tool install --global dotnet-ef` => install EntityFramework globally
-2. `dotnet ef migrations add [migration-name]` => creating migration (add flag `-v` or `--verbose` to enable logs)
-3. `dotnet ef database update` => apply changes to database
--------------------------
+
+#### Init env variables and other support data
+
+`cd [Apit]`
+
+UNIX: `. ./setenv.sh`
+
+WIN:  `setenv.cmd`
+
+
+-----------------------------------------------------------------------------------
+
+#### Add new DB migration
+
+| Command                                   | Description                         | 
+|-------------------------------------------|-------------------------------------| 
+| `dotnet tool install --global dotnet-ef`  | install EntityFramework globally    | 
+| `cd [DatabaseLayer]`                      | change directory                    | 
+| `. ./migration.sh [migration_name] [-v]`  | run bash script (windows . => bash) | 
+-----------------------------------------------------------------------------------

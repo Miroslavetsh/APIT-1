@@ -1,0 +1,10 @@
+﻿@inject ProjectConfig Config
+
+@{
+    ViewBag["Title"] = "Feedback us";
+    const string emailSubject = "Тема листа";
+}
+
+<h1>Feedback</h1>
+<a href="tel:@Config.Feedback.ShortPhone">Phone: @Config.Feedback.PhoneNumber</a>
+<a href="mailto:@Config.Feedback.Email?subject=@emailSubject">@Config.Feedback.Email</a>

@@ -8,11 +8,15 @@ namespace Apit.Controllers
     {
         public IActionResult Index()
         {
-            ViewData["Title"] = "Index page title is so good!";
             return View();
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Feedback()
         {
             return View();
         }

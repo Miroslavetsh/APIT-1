@@ -31,7 +31,7 @@ namespace Apit.Controllers
         }
 
 
-        public IActionResult P(string id)
+        public IActionResult Index(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) Error();
             var article = _dataManager.Articles.GetByUniqueAddress(id);

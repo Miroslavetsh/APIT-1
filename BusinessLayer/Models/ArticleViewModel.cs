@@ -8,6 +8,8 @@ namespace BusinessLayer.Models
 {
     public class ArticleViewModel
     {
+        public Guid Id { get; set; }
+
         public string UniqueAddress { get; set; }
         public string DocFileAddress { get; set; }
 

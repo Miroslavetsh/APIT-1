@@ -53,10 +53,11 @@ namespace Apit.Controllers
             _dataManager.Conferences.AddParticipant(conference, user);
             _dataManager.Conferences.SaveChanges();
 
-            ViewBag["ResultMessage"] = "<span>Добро пожаловать!</span>";
+            ViewBag.ResultMessage = "<span>Добро пожаловать!</span>";
             return RedirectToAction("index", "conference");
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Unsubscribe()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -67,7 +68,7 @@ namespace Apit.Controllers
             _dataManager.Conferences.RemoveParticipant(conference, user);
             _dataManager.Conferences.SaveChanges();
 
-            ViewBag["ResultMessage"] = "<span>Ви больше не с нами</span>";
+            ViewBag.ResultMessage = "<span>Ви больше не с нами</span>";
             return RedirectToAction("index", "conference");
         }
 

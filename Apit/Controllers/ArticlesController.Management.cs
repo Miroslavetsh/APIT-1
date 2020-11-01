@@ -33,16 +33,11 @@ namespace Apit.Controllers
         {
             try
             {
-                var articleId = Guid.Parse(id);
-                if (_dataManager.Articles.IsExist(articleId))
-                {
-                    var article = _dataManager.Articles.GetById(articleId);
-                    var user = await _userManager.GetUserAsync(User);
+                var article = _dataManager.Articles.GetByUniqueAddress(id);
+                var user = await _userManager.GetUserAsync(User);
 
-                    if (user == article.Creator) _dataManager.Articles.Delete(articleId);
-                    else ModelState.AddModelError(nameof(ArticleViewModel.Creator), "доступ заблоковано");
-                }
-                else ModelState.AddModelError(nameof(ArticleViewModel.UniqueAddress), "такої статті не існує");
+                if (user == article.Creator) _dataManager.Articles.Delete(article.Id);
+                else ModelState.AddModelError(nameof(ArticleViewModel.Creator), "доступ заблоковано");
 
                 return LocalRedirect(returnUrl ?? "/");
             }

@@ -10,26 +10,28 @@
 {
     <div>
         <a asp-controller="articles" asp-action="edit" asp-route-id="@article.UniqueAddress">Edit</a>
-        <form asp-controller="articles" asp-action="delete"
-              asp-route-id="@article.UniqueAddress"
-              asp-route-returnUrl="@Context.Request.Path">
+        <form method="post" asp-controller="articles" asp-action="delete"
+              asp-route-id="@article.UniqueAddress">
             <button type="submit">Delete</button>
         </form>
     </div>
 }
 
-<article>
+<section>
     <h4>
         <span>Topic: </span> @article.Topic?.Name
     </h4>
     <h3>@article.Title</h3>
     <hr>
-    <p>@article.HTMLContent</p>
+
+    @Html.Raw(article.HTMLContent)
+
     <hr>
-    <a asp-controller="resources" asp-action="document"
-       asp-route-id="@article.DocFileAddress"
-       asp-route-returnUrl="@Context.Request.Path">
-        Download as document
-    </a>
+    @if (!string.IsNullOrWhiteSpace(@article.DocFileAddress))
+    {
+        <a asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
+            Download as document
+        </a>
+    }
     <span>Created at: @article.DateCreated.ToString(CultureInfo.CurrentCulture)</span>
-</article>
+</section>

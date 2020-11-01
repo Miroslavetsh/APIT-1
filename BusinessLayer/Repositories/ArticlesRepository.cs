@@ -78,14 +78,17 @@ namespace BusinessLayer.Repositories
 
             return new ArticleViewModel
             {
-                UniqueAddress = article.UniqueAddress,
+                Id = article.Id,
                 Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.TopicId),
                 Creator = _ctx.Users.FirstOrDefault(u => u.Id == article.CreatorId),
+
+                UniqueAddress = article.UniqueAddress,
+                DocFileAddress = article.DocxFilePath,
+                HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath),
 
                 Title = article.Title,
                 Status = article.Status,
                 KeyWords = article.KeyWords.Split(';'),
-                HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath),
 
                 DateCreated = article.DateCreated,
                 DateLastModified = article.DateLastModified

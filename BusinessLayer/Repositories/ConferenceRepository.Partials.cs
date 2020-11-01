@@ -78,7 +78,6 @@ namespace BusinessLayer.Repositories
             }
 
             conference.Articles.Add(article);
-            _ctx.Articles.Add(article);
         }
 
         public void AddImage(Conference conference, IFormFile imageFile)

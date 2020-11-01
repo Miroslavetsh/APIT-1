@@ -23,7 +23,7 @@ else
             <a asp-action="JoinNow" asp-controller="conference">Join now!</a>
         }
 
-        @ViewBag["ResultMessage"]
+        @ViewBag.ResultMessage
     }
 
     @foreach (var admin in Model.Admins)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BusinessLayer.DataServices;
 using BusinessLayer.Models;
@@ -37,7 +38,15 @@ namespace Apit.Controllers
             if (topic == null)
             {
                 ModelState.AddModelError(nameof(model.TopicId),
-                    "дана опція не може бути використана");
+                    "дана тема не може бути використана");
+                hasIncorrectData = true;
+            }
+
+            // "hello, wor/*+#ld1!" != "hello, world1!"
+            if (_keyWordsAvailableRegex.Replace(model.KeyWords, "") != "")
+            {
+                ModelState.AddModelError(nameof(model.KeyWords),
+                    "Unsupported character detected");
                 hasIncorrectData = true;
             }
 
@@ -46,7 +55,7 @@ namespace Apit.Controllers
             _logger.LogInformation("Upload file with extension: " + extension);
             if (model.DocFile.Length > 0)
             {
-                if (extension != "doc" && extension != "docx")
+                if (!Regex.IsMatch(extension ?? "", @".docx?$"))
                 {
                     ModelState.AddModelError(nameof(model.DocFile),
                         "невірний формат файлу (доступно лише .doc і .docx)");
@@ -54,8 +63,10 @@ namespace Apit.Controllers
                 }
                 else if (!hasIncorrectData)
                 {
-                    if (!await DataUtil.TrySaveDocFile(model.DocFile, model.UniqueAddress, extension))
+                    string err = await DataUtil.TrySaveDocFile(model.DocFile, model.UniqueAddress, extension);
+                    if (err != null)
                     {
+                        _logger.LogError("Document converter error\n" + err);
                         ModelState.AddModelError(nameof(model.DocFile),
                             "даний файл не може бути збереженим, оскільки може нести у собі загрозу для сервісу. " +
                             "Якщо це не так, будь ласка, зверніться до адміністрації сайту");
@@ -83,13 +94,14 @@ namespace Apit.Controllers
                 Id = Guid.NewGuid(),
                 TopicId = topic.Id,
                 CreatorId = user.Id,
+                UniqueAddress = model.UniqueAddress,
 
                 Title = model.Title,
                 Status = ArticleStatus.Uploaded,
                 KeyWords = _keyWordsSeparatorRegex.Replace(model.KeyWords, ";"),
 
                 HtmlFilePath = model.UniqueAddress + ".htm",
-                DocxFilePath = model.UniqueAddress + "." + extension,
+                DocxFilePath = model.UniqueAddress + extension,
 
                 Conference = _dataManager.Conferences.GetCurrentAsDbModel(),
 
@@ -101,7 +113,7 @@ namespace Apit.Controllers
             _dataManager.Conferences.AddArticle(currentConf, article);
             _dataManager.Articles.Create(article);
 
-            return LocalRedirect("/articles/p/" + model.UniqueAddress);
+            return RedirectToAction("index", "articles", new {id = model.UniqueAddress});
         }
     }
 }

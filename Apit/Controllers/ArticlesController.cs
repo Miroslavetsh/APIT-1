@@ -26,8 +26,8 @@ namespace Apit.Controllers
             _userManager = userManager;
             _dataManager = dataManager;
 
-            _keyWordsAvailableRegex = new Regex("^[а-яА-Яa-zA-Z0-9 ,;'іїєґ]+$", RegexOptions.Compiled);
-            _keyWordsSeparatorRegex = new Regex("[ ,;]", RegexOptions.Compiled);
+            _keyWordsAvailableRegex = new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;'іїєґ!]+$", RegexOptions.Compiled);
+            _keyWordsSeparatorRegex = new Regex(@"[ ,;]+", RegexOptions.Compiled);
         }
 
 

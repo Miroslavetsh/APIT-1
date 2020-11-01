@@ -1,0 +1,7 @@
+@echo off
+
+set SERVICE_EMAIL_PASSWORD=gbhfn2001
+
+set SERVICE_EMAIL_PORT=smtp.gmail.com
+
+set /A SERVICE_EMAIL_PORT=465

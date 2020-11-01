@@ -5,13 +5,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Aspose.Words" Version="20.10.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
-      <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
+      <PackageReference Include="sautinsoft.rtftohtml" Version="7.4.5.25" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DatabaseLayer\DatabaseLayer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+        <HintPath>..\DatabaseLayer\Tools\Microsoft.Office.Interop.Word.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

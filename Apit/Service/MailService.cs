@@ -33,7 +33,7 @@ namespace Apit.Service
                     Subject = subject,
                     Body = new BodyBuilder
                     {
-                        HtmlBody = "<div style=\"color: green;\">" + body + "</div>"
+                        HtmlBody = "<div style=\"color: green;\"><a href=\"" + body + "\">Press ME!</a></div>"
                     }.ToMessageBody()
                 };
 
